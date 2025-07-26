@@ -1,0 +1,57 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/axi_fifo_bram.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module axi_fifo_bram
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/bimpy.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module bimpy
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/bitreverse.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module bitreverse
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/butterfly.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module butterfly
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convenc.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module convenc
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module convround
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/crc32_tx.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module crc32_tx
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dot11_tx
+WARNING: [VRFC 10-3380] identifier 'bits_enc_fifo_iready' is used before its declaration [C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v:124]
+WARNING: [VRFC 10-3380] identifier 'bits_enc_fifo_iready' is used before its declaration [C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v:139]
+WARNING: [VRFC 10-3380] identifier 'bits_enc_fifo_iready' is used before its declaration [C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v:195]
+WARNING: [VRFC 10-3380] identifier 'bits_enc_fifo_iready' is used before its declaration [C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v:227]
+WARNING: [VRFC 10-3380] identifier 'enc_pos' is used before its declaration [C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v:393]
+WARNING: [VRFC 10-3380] identifier 'pkt_fifo_space' is used before its declaration [C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v:508]
+WARNING: [VRFC 10-3380] identifier 'pkt_fifo_space' is used before its declaration [C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v:613]
+WARNING: [VRFC 10-3380] identifier 'fifo_turn' is used before its declaration [C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v:688]
+WARNING: [VRFC 10-3380] identifier 'fifo_turn' is used before its declaration [C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v:705]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ht_ltf_rom.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ht_ltf_rom
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ht_stf_rom.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ht_stf_rom
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/hwbfly.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module hwbfly
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftmain.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ifftmain
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftstage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fftstage
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/l_ltf_rom.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module l_ltf_rom
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/l_stf_rom.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module l_stf_rom
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/laststage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module laststage
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/longbimpy.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module longbimpy
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/modulation.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module modulation
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/punc_interlv_lut.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module punc_interlv_lut
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/qtrstage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module qtrstage
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ram_2port.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ram_2port
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ram_simo.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ram_simo
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dot11_tx_tb
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/openofdm_tx/openofdm_tx.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl

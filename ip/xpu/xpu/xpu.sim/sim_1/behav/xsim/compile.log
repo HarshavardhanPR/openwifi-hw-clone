@@ -1,0 +1,12 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mv_avg
+INFO: [VRFC 10-2458] undeclared symbol empty, assumed default net type wire [C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg.v:62]
+INFO: [VRFC 10-2458] undeclared symbol full, assumed default net type wire [C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg.v:63]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg_dual_ch.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mv_avg_dual_ch
+INFO: [VRFC 10-2458] undeclared symbol empty, assumed default net type wire [C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg_dual_ch.v:72]
+INFO: [VRFC 10-2458] undeclared symbol full, assumed default net type wire [C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg_dual_ch.v:73]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/unit_test/mv_avg/mv_avg_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mv_avg_tb
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/xpu/xpu.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl

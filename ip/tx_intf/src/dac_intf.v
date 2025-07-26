@@ -34,6 +34,7 @@
     input wire [1:0] simple_cdd_flag,
   
     input wire acc_clk,
+    
 	  input wire acc_rstn,
     input wire [(2*IQ_DATA_WIDTH-1) : 0] data_from_acc,
     `DEBUG_PREFIX input wire data_valid_from_acc,
@@ -46,7 +47,7 @@
 `endif
 
 	);
-
+wire fulln_to_acc;
     wire ALMOSTEMPTY;
     wire ALMOSTFULL;
     wire EMPTY_internal;
@@ -93,7 +94,7 @@
         dac_data_internal_delay2 <= dac_data_internal_delay1;
       end
     end
-
+reg wren_internal_reg;
 `ifndef TX_BB_CLK_GEN_FROM_RF
     assign wren_internal = data_valid_from_acc;
 `else // keep reading bb fifo via read_bb_fifo at 20M, keep writing fifo here at 40M (2x interpolation with 0)
@@ -101,7 +102,7 @@
     assign wren_internal = wren_internal_reg;
 
     reg [(2*IQ_DATA_WIDTH-1) : 0] dac_intf_fifo_in;
-    reg wren_internal_reg;
+    
     reg [4:0] counter;
 
     // 20MHz

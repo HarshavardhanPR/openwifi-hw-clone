@@ -1,5 +1,5 @@
 #*****************************************************************************************
-# Vivado (TM) v2017.4.1 (64-bit)
+# Vivado (TM) v2017.4.1 (64-bit) - Modified for Vivado 2021.1 and ZC702_FMCS2
 #
 # openofdm_tx.tcl: Tcl script for re-creating project 'openofdm_tx'
 #
@@ -32,7 +32,8 @@ set ARGUMENT6 [lindex $argv 5]
 set ARGUMENT7 [lindex $argv 6]
 
 if {$ARGUMENT1 eq ""} {
-  set BOARD_NAME zed_fmcs2
+  # MODIFIED: Default BOARD_NAME to zc702_fmcs2 if not provided as an argument
+  set BOARD_NAME zc702_fmcs2
 } else {
   set BOARD_NAME $ARGUMENT1
 }
@@ -43,6 +44,7 @@ if {$ARGUMENT2 eq ""} {
   set NUM_CLK_PER_US $ARGUMENT2
 }
 
+# Assuming parse_board_name.tcl is in the parent directory and correctly defines part_string
 source ../parse_board_name.tcl
 
 set MODULE_NAME OPENOFDM_TX
@@ -166,7 +168,8 @@ set proj_dir [get_property directory [current_project]]
 # Set project properties
 set obj [current_project]
 set_property -name "board_connections" -value "" -objects $obj
-# set_property -name "board_part" -value "xilinx.com:zc706:part0:1.4" -objects $obj
+# Set the correct board_part for ZC702_FMCS2. This is a redundant setting if parse_board_name.tcl works correctly, but safe to keep.
+set_property -name "board_part" -value "xilinx.com:zc702:part0:1.4" -objects $obj
 set_property -name "compxlib.activehdl_compiled_library_dir" -value "$proj_dir/${project_name}.cache/compile_simlib/activehdl" -objects $obj
 set_property -name "compxlib.funcsim" -value "1" -objects $obj
 set_property -name "compxlib.ies_compiled_library_dir" -value "$proj_dir/${project_name}.cache/compile_simlib/ies" -objects $obj

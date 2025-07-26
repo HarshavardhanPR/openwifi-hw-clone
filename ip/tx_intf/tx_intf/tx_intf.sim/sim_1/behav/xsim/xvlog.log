@@ -1,0 +1,26 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/csi_fuzzer.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module csi_fuzzer
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/dac_intf.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dac_intf
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/div_int.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module div_int
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/edge_to_flip.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module edge_to_flip
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/ht_sig_crc_calc.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ht_sig_crc_calc
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/tx_bit_intf.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tx_bit_intf
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/tx_interrupt_selection.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tx_interrupt_selection
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/tx_intf.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tx_intf
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/tx_intf_s_axi.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tx_intf_s_axi
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/tx_intf_s_axis.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tx_intf_s_axis
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/tx_iq_intf.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tx_iq_intf
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/src/tx_status_fifo.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tx_status_fifo
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/tx_intf/tx_intf_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tx_intf_tb

@@ -1,0 +1,21 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../src/csi_fuzzer.v" \
+"../../../../../src/dac_intf.v" \
+"../../../../../src/div_int.v" \
+"../../../../../src/edge_to_flip.v" \
+"../../../../../src/ht_sig_crc_calc.v" \
+"../../../../../src/tx_bit_intf.v" \
+"../../../../../src/tx_interrupt_selection.v" \
+"../../../../../src/tx_intf.v" \
+"../../../../../src/tx_intf_s_axi.v" \
+"../../../../../src/tx_intf_s_axis.v" \
+"../../../../../src/tx_iq_intf.v" \
+"../../../../../src/tx_status_fifo.v" \
+"../../../../../tx_intf_tb.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

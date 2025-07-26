@@ -1,0 +1,31 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../src/axi_fifo_bram.v" \
+"../../../../../src/bimpy.v" \
+"../../../../../src/bitreverse.v" \
+"../../../../../src/butterfly.v" \
+"../../../../../src/convenc.v" \
+"../../../../../src/convround.v" \
+"../../../../../src/crc32_tx.v" \
+"../../../../../src/dot11_tx.v" \
+"../../../../../src/ht_ltf_rom.v" \
+"../../../../../src/ht_stf_rom.v" \
+"../../../../../src/hwbfly.v" \
+"../../../../../src/ifftmain.v" \
+"../../../../../src/ifftstage.v" \
+"../../../../../src/l_ltf_rom.v" \
+"../../../../../src/l_stf_rom.v" \
+"../../../../../src/laststage.v" \
+"../../../../../src/longbimpy.v" \
+"../../../../../src/modulation.v" \
+"../../../../../src/punc_interlv_lut.v" \
+"../../../../../src/qtrstage.v" \
+"../../../../../src/ram_2port.v" \
+"../../../../../src/ram_simo.v" \
+"../../../../../src/dot11_tx_tb.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

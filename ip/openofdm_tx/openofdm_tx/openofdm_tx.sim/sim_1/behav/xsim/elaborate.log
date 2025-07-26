@@ -1,0 +1,143 @@
+Vivado Simulator v2021.1
+Copyright 1986-1999, 2001-2021 Xilinx, Inc. All Rights Reserved.
+Running: D:/Apps/v_log/Vivado/2021.1/bin/unwrapped/win64.o/xelab.exe -wto 5df7db5b3b374eb98da78e6e0756bacc --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot dot11_tx_tb_behav xil_defaultlib.dot11_tx_tb xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v" Line 10. Module dot11_tx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/l_stf_rom.v" Line 9. Module l_stf_rom doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/l_ltf_rom.v" Line 9. Module l_ltf_rom doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ht_stf_rom.v" Line 9. Module ht_stf_rom doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ht_ltf_rom.v" Line 9. Module ht_ltf_rom doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/crc32_tx.v" Line 7. Module crc32_tx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convenc.v" Line 7. Module convenc doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/axi_fifo_bram.v" Line 13. Module axi_fifo_bram(WIDTH=2,SIZE=10) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ram_2port.v" Line 20. Module ram_2port(DWIDTH=2,AWIDTH=10) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/punc_interlv_lut.v" Line 7. Module punc_interlv_lut doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ram_simo.v" Line 8. Module ram_simo(DEPTH=52) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/modulation.v" Line 9. Module modulation doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftmain.v" Line 77. Module ifftmain doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftstage.v" Line 64. Module fftstage(OWIDTH=16,COEFFILE="icmem_64.mem") doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/hwbfly.v" Line 68. Module hwbfly(CWIDTH=20,OWIDTH=16,CKPCE=2'b01) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftstage.v" Line 64. Module fftstage(OWIDTH=16,LGSPAN=4,COEFFILE="icmem_32.mem") doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/hwbfly.v" Line 68. Module hwbfly(CWIDTH=20,OWIDTH=16,CKPCE=2'b01) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftstage.v" Line 64. Module fftstage(OWIDTH=16,LGSPAN=3,COEFFILE="icmem_16.mem") doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/hwbfly.v" Line 68. Module hwbfly(CWIDTH=20,OWIDTH=16,CKPCE=2'b01) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftstage.v" Line 64. Module fftstage(OWIDTH=16,LGSPAN=2,COEFFILE="icmem_8.mem") doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/hwbfly.v" Line 68. Module hwbfly(CWIDTH=20,OWIDTH=16,CKPCE=2'b01) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/qtrstage.v" Line 72. Module qtrstage(OWIDTH=16,LGWIDTH=6,INVERSE=1) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/laststage.v" Line 45. Module laststage(OWIDTH=16,SHIFT=1) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16,SHIFT=1) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16,SHIFT=1) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/bitreverse.v" Line 46. Module bitreverse(LGSIZE=6,WIDTH=16) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/axi_fifo_bram.v" Line 13. Module axi_fifo_bram(SIZE=6) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ram_2port.v" Line 20. Module ram_2port(AWIDTH=6) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/axi_fifo_bram.v" Line 13. Module axi_fifo_bram(SIZE=8) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ram_2port.v" Line 20. Module ram_2port(AWIDTH=8) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/dot11_tx.v" Line 10. Module dot11_tx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/l_stf_rom.v" Line 9. Module l_stf_rom doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/l_ltf_rom.v" Line 9. Module l_ltf_rom doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ht_stf_rom.v" Line 9. Module ht_stf_rom doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ht_ltf_rom.v" Line 9. Module ht_ltf_rom doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/crc32_tx.v" Line 7. Module crc32_tx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convenc.v" Line 7. Module convenc doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/axi_fifo_bram.v" Line 13. Module axi_fifo_bram(WIDTH=2,SIZE=10) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ram_2port.v" Line 20. Module ram_2port(DWIDTH=2,AWIDTH=10) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/punc_interlv_lut.v" Line 7. Module punc_interlv_lut doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ram_simo.v" Line 8. Module ram_simo(DEPTH=52) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/modulation.v" Line 9. Module modulation doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftmain.v" Line 77. Module ifftmain doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftstage.v" Line 64. Module fftstage(OWIDTH=16,COEFFILE="icmem_64.mem") doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/hwbfly.v" Line 68. Module hwbfly(CWIDTH=20,OWIDTH=16,CKPCE=2'b01) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftstage.v" Line 64. Module fftstage(OWIDTH=16,LGSPAN=4,COEFFILE="icmem_32.mem") doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/hwbfly.v" Line 68. Module hwbfly(CWIDTH=20,OWIDTH=16,CKPCE=2'b01) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftstage.v" Line 64. Module fftstage(OWIDTH=16,LGSPAN=3,COEFFILE="icmem_16.mem") doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/hwbfly.v" Line 68. Module hwbfly(CWIDTH=20,OWIDTH=16,CKPCE=2'b01) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ifftstage.v" Line 64. Module fftstage(OWIDTH=16,LGSPAN=2,COEFFILE="icmem_8.mem") doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/hwbfly.v" Line 68. Module hwbfly(CWIDTH=20,OWIDTH=16,CKPCE=2'b01) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=37,OWID=16,SHIFT=2) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=39,OWID=16,SHIFT=4) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/qtrstage.v" Line 72. Module qtrstage(OWIDTH=16,LGWIDTH=6,INVERSE=1) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/laststage.v" Line 45. Module laststage(OWIDTH=16,SHIFT=1) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16,SHIFT=1) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/convround.v" Line 48. Module convround(IWID=17,OWID=16,SHIFT=1) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/bitreverse.v" Line 46. Module bitreverse(LGSIZE=6,WIDTH=16) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/axi_fifo_bram.v" Line 13. Module axi_fifo_bram(SIZE=6) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ram_2port.v" Line 20. Module ram_2port(AWIDTH=6) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/axi_fifo_bram.v" Line 13. Module axi_fifo_bram(SIZE=8) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/openofdm_tx/src/ram_2port.v" Line 20. Module ram_2port(AWIDTH=8) doesn't have a timescale but at least one module in design has a timescale.
+INFO: [Common 17-14] Message 'XSIM 43-4099' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.l_stf_rom
+Compiling module xil_defaultlib.l_ltf_rom
+Compiling module xil_defaultlib.ht_stf_rom
+Compiling module xil_defaultlib.ht_ltf_rom
+Compiling module xil_defaultlib.crc32_tx
+Compiling module xil_defaultlib.convenc
+Compiling module xil_defaultlib.ram_2port(DWIDTH=2,AWIDTH=10)
+Compiling module xil_defaultlib.axi_fifo_bram(WIDTH=2,SIZE=10)
+Compiling module xil_defaultlib.punc_interlv_lut
+Compiling module xil_defaultlib.ram_simo(DEPTH=52)
+Compiling module xil_defaultlib.modulation
+Compiling module xil_defaultlib.convround(IWID=37,OWID=16,SHIFT=...
+Compiling module xil_defaultlib.convround(IWID=39,OWID=16,SHIFT=...
+Compiling module xil_defaultlib.hwbfly(CWIDTH=20,OWIDTH=16,CKPCE...
+Compiling module xil_defaultlib.fftstage(OWIDTH=16,COEFFILE="icm...
+Compiling module xil_defaultlib.fftstage(OWIDTH=16,LGSPAN=4,COEF...
+Compiling module xil_defaultlib.fftstage(OWIDTH=16,LGSPAN=3,COEF...
+Compiling module xil_defaultlib.fftstage(OWIDTH=16,LGSPAN=2,COEF...
+Compiling module xil_defaultlib.convround(IWID=17,OWID=16)
+Compiling module xil_defaultlib.qtrstage(OWIDTH=16,LGWIDTH=6,INV...
+Compiling module xil_defaultlib.convround(IWID=17,OWID=16,SHIFT=...
+Compiling module xil_defaultlib.laststage(OWIDTH=16,SHIFT=1)
+Compiling module xil_defaultlib.bitreverse(LGSIZE=6,WIDTH=16)
+Compiling module xil_defaultlib.ifftmain
+Compiling module xil_defaultlib.ram_2port(AWIDTH=6)
+Compiling module xil_defaultlib.axi_fifo_bram(SIZE=6)
+Compiling module xil_defaultlib.ram_2port(AWIDTH=8)
+Compiling module xil_defaultlib.axi_fifo_bram(SIZE=8)
+Compiling module xil_defaultlib.dot11_tx
+Compiling module xil_defaultlib.dot11_tx_tb
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot dot11_tx_tb_behav

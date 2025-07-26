@@ -1,0 +1,8 @@
+0.7
+2020.2
+Jun 10 2021
+20:04:57
+C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg.v,1753260511,verilog,,C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg_dual_ch.v,,mv_avg,,,,,,,,
+C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg_dual_ch.v,1753260511,verilog,,C:/SPB_Data/openwifi-hw/ip/xpu/unit_test/mv_avg/mv_avg_tb.v,,mv_avg_dual_ch,,,,,,,,
+C:/SPB_Data/openwifi-hw/ip/xpu/unit_test/mv_avg/mv_avg_tb.v,1753260511,verilog,,,,mv_avg_tb,,,,,,,,
+C:/SPB_Data/openwifi-hw/ip/xpu/xpu/xpu.sim/sim_1/behav/xsim/glbl.v,1623370582,verilog,,,,glbl,,,,,,,,

@@ -47,7 +47,8 @@
     // to tx core
     output wire tx_hold
 	);
-  
+  wire [(2*IQ_DATA_WIDTH-1) : 0] bw02_iq_pack;
+  wire bw02_iq_valid;
     reg signed [(10+IQ_DATA_WIDTH-1) : 0] rf_i_tmp;
     reg signed [(10+IQ_DATA_WIDTH-1) : 0] rf_q_tmp;
     reg tx_iq_fifo_wren_reg;

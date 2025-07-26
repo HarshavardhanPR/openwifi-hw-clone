@@ -80,14 +80,7 @@ module tx_intf #
   input wire [79:0] tx_status,
   input wire [47:0] mac_addr,
   output wire [(WIFI_TX_BRAM_DATA_WIDTH-1):0] douta,//for changing some bits to indicate it is the 1st pkt or retransmitted pkt
-  // output wire [(IQ_DATA_WIDTH-1):0] i0,
-  // output wire [(IQ_DATA_WIDTH-1):0] q0,
-  // output wire [(IQ_DATA_WIDTH-1):0] i1,
-  // output wire [(IQ_DATA_WIDTH-1):0] q1,
-  // output wire iq_valid,
-  //output wire [31:0] mixer_cfg,
   output wire tx_iq_fifo_empty,
-  //output wire [13:0] tx_iq_fifo_data_count,
   input wire [3:0] slice_en, // allow sending new Linux packet or not
   input wire backoff_done,
   input wire tx_bb_is_ongoing,
@@ -163,37 +156,28 @@ module tx_intf #
   wire slv_reg_wren;
   wire [4:0] axi_awaddr_core;
   wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg0; 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg1; // write arbitrary I/Q from this register port
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg2; // phy tx auto_start_mode and num_dma_symbol_th
-  // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg3; // 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg4; // CTS duration for CTS-TO-SELF CTS-PROTECT TX
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg5; // 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg6; // 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg7; // TX arbitrary I/Q control
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg1; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg2; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg4; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg5; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg6; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg7; 
   wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg8; 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg9; // 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg9; 
   wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg10; 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg11; // 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg12; // 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg13; // 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg14; // 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg15; // 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg11; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg12; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg13; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg14; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg15; 
   wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg16; 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg17; // 
-  //wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg18; 
-  //wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg19;
-  // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg20; // 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg21; // 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg22; // 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg23; // 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg17; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg21; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg22; 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg23; 
   wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg24; 
-  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg25; // 
+  wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg25; 
   wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg26; 
-  //wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg27; // 
-  //wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg28; // 
-  //wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg29; // 
-  //wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg30; // 
-  //wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg31; // MSB 8 bits are used for version read out
   
   wire [(2*IQ_DATA_WIDTH-1) : 0] ant_data;
   wire ant_data_valid;
@@ -203,9 +187,6 @@ module tx_intf #
   wire [(2*IQ_DATA_WIDTH-1) : 0] wifi_iq_pack;
   wire wifi_iq_valid;
   wire wifi_iq_ready;
-  //While wifi_iq_ready-->iq_valid_for_check has "bad luck" phase to iq0_for_check (valid/strobe == 1 at the end of the sample stable period), 
-  //the FPGA internal loopback in rx_intf (slv_reg3[8] controlled) will not work.
-  //So, we delay the wifi_iq_ready on purpose by 1 clk to wifi_iq_ready_delay. (Need to dig further why the openofdm_rx does not work)
   wire wifi_iq_ready_delay;
 
   wire [(C_S00_AXIS_TDATA_WIDTH-1):0] s_axis_data_to_acc;
@@ -220,19 +201,11 @@ module tx_intf #
   wire [1:0] linux_prio;
   wire [5:0] bd_wr_idx;
   wire [5:0] pkt_cnt;
-  // wire [15:0] tx_pkt_num_dma_byte;
 
   wire [6:0] tx_config_fifo_data_count0;
   wire [6:0] tx_config_fifo_data_count1;
   wire [6:0] tx_config_fifo_data_count2;
   wire [6:0] tx_config_fifo_data_count3;
-
-  wire [5:0] dac_intf_rd_data_count;
-  wire [5:0] dac_intf_wr_data_count;
-  wire [27:0] dac_intf_counter_1s;
-  wire [26:0] dac_intf_counter_rden_store;
-  wire [27:0] dac_intf_counter_dac;
-  wire [26:0] dac_intf_counter_wren_store;
   
   wire phy_tx_auto_start_mode;
   wire [9:0] phy_tx_auto_start_num_dma_symbol_th;
@@ -244,7 +217,7 @@ module tx_intf #
   wire [13:0] send_cts_toself_wait_sifs_top;
 
   assign iq0_for_check = wifi_iq_pack;
-  assign iq1_for_check = 0; //wifi_iq1_pack;
+  assign iq1_for_check = 0; 
   assign iq_valid_for_check = wifi_iq_ready_delay;
 
   assign bram_addr_to_xpu = bram_addr;
@@ -262,8 +235,6 @@ module tx_intf #
 
   assign tx_itrpt = (slv_reg14[17]==0?(slv_reg14[8]?tx_itrpt_internal: (tx_itrpt_internal&(~ack_tx_flag)) ):0);
 
-  // assign slv_reg26[1:0] = tx_queue_idx;
-  // assign slv_reg26[13:2] = bd_wr_idx;
   assign slv_reg26[6:0] = tx_config_fifo_data_count0;
   assign slv_reg26[14:8] = tx_config_fifo_data_count1;
   assign slv_reg26[22:16] = tx_config_fifo_data_count2;
@@ -293,19 +264,13 @@ module tx_intf #
   ) dac_intf_i (
     .dac_rst(dac_rst),
     .dac_clk(dac_clk),
-
-    //connect util_ad9361_dac_upack
     .dac_data(dac_data),
     .dac_valid(dac_valid),
     .dac_ready(dac_ready),
-    
-    .ant_flag(slv_reg16[1]), //slv_reg16[3:0]: 1: first antenna; 2: second antenna
+    .ant_flag(slv_reg16[1]),
     .simple_cdd_flag(slv_reg16[5:4]), 
-
     .acc_clk(s00_axi_aclk),
     .acc_rstn(s00_axi_aresetn&(~slv_reg0[5])),
-
-    //from duc&ant_selection
     .data_valid_from_acc(ant_data_valid&(~slv_reg10[1])),
 `ifndef TX_BB_CLK_GEN_FROM_RF
     .data_from_acc(ant_data),
@@ -317,32 +282,14 @@ module tx_intf #
 `endif
   );
 
-`ifndef TX_BB_CLK_GEN_FROM_RF
-  duc_bank_core # (
-  ) duc_bank_core_i (
-    .clk(s00_axis_aclk),
-    .rstn(s00_axis_aresetn&(~slv_reg0[1])),
-    .ant_data_full_n(fulln_from_dac_to_duc),
-    .ant_data_wr_data(ant_data),
-    .ant_data_wr_en(ant_data_valid),
-    .cfg0(slv_reg1),
-    .bw20_data_tdata(wifi_iq_pack),
-    .bw20_data_tready(wifi_iq_ready),
-    .bw20_data_tvalid(wifi_iq_valid)
-  );
-`endif
-
-// Instantiation of Axi Bus Interface S00_AXI
 	tx_intf_s_axi # ( 
 		.C_S_AXI_DATA_WIDTH(C_S00_AXI_DATA_WIDTH),
 		.C_S_AXI_ADDR_WIDTH(C_S00_AXI_ADDR_WIDTH)
 	) tx_intf_s_axi_i (
     .slv_reg_rden(slv_reg_rden),
 		.axi_araddr_core(axi_araddr_core),
-
     .slv_reg_wren_delay(slv_reg_wren),
     .axi_awaddr_core(axi_awaddr_core),
-
 		.S_AXI_ACLK(s00_axi_aclk),
 		.S_AXI_ARESETN(s00_axi_aresetn),
 		.S_AXI_AWADDR(s00_axi_awaddr),
@@ -364,11 +311,9 @@ module tx_intf #
 		.S_AXI_RRESP(s00_axi_rresp),
 		.S_AXI_RVALID(s00_axi_rvalid),
 		.S_AXI_RREADY(s00_axi_rready),
-
 		.SLV_REG0(slv_reg0),
 		.SLV_REG1(slv_reg1),
 		.SLV_REG2(slv_reg2),
-		// .SLV_REG3(slv_reg3),
 		.SLV_REG4(slv_reg4),
     .SLV_REG5(slv_reg5),
     .SLV_REG6(slv_reg6),
@@ -382,30 +327,20 @@ module tx_intf #
     .SLV_REG14(slv_reg14),
     .SLV_REG15(slv_reg15),
 		.SLV_REG16(slv_reg16),
-        .SLV_REG17(slv_reg17),
-        //.SLV_REG18(slv_reg18),
-        //.SLV_REG19(slv_reg19),
-        // .SLV_REG20(slv_reg20),
-        .SLV_REG21(slv_reg21),
-        .SLV_REG22(slv_reg22),
-        .SLV_REG23(slv_reg23),
-        .SLV_REG24(slv_reg24),
-        .SLV_REG25(slv_reg25),
-        .SLV_REG26(slv_reg26)/*,
-        .SLV_REG27(slv_reg27),
-        .SLV_REG28(slv_reg28),
-        .SLV_REG29(slv_reg29),
-        .SLV_REG30(slv_reg30),
-        .SLV_REG31(slv_reg31)*/
+    .SLV_REG17(slv_reg17),
+    .SLV_REG21(slv_reg21),
+    .SLV_REG22(slv_reg22),
+    .SLV_REG23(slv_reg23),
+    .SLV_REG24(slv_reg24),
+    .SLV_REG25(slv_reg25),
+    .SLV_REG26(slv_reg26)
 	);
 
-    tx_status_fifo tx_status_fifo_i ( // hooked to slv_reg22, slv_reg23, slv_reg24, and slv_reg25
+    tx_status_fifo tx_status_fifo_i ( 
         .rstn(s00_axis_aresetn&(~slv_reg0[7])),
         .clk(s00_axis_aclk),
-            
         .slv_reg_rden(slv_reg_rden),
         .axi_araddr_core(axi_araddr_core),
-
         .tx_try_complete(tx_try_complete),
         .num_slot_random(num_slot_random),
         .cw(cw),
@@ -414,18 +349,12 @@ module tx_intf #
         .pkt_cnt(pkt_cnt),
         .tx_queue_idx(tx_queue_idx),
         .bd_wr_idx(bd_wr_idx),
-        // .s_axis_fifo_data_count0(s_axis_fifo_data_count0),
-        // .s_axis_fifo_data_count1(s_axis_fifo_data_count1),
-        // .s_axis_fifo_data_count2(s_axis_fifo_data_count2),
-        // .s_axis_fifo_data_count3(s_axis_fifo_data_count3),
-        
         .tx_status_out1(slv_reg22),
         .tx_status_out2(slv_reg23),
         .tx_status_out3(slv_reg24),
         .tx_status_out4(slv_reg25)
     );
 
-// Instantiation of Axi Bus Interface S00_AXIS
 	tx_intf_s_axis # ( 
 		.C_S_AXIS_TDATA_WIDTH(C_S00_AXIS_TDATA_WIDTH),
 		.MAX_NUM_DMA_SYMBOL(MAX_NUM_DMA_SYMBOL),
@@ -439,32 +368,27 @@ module tx_intf #
 		.S_AXIS_TLAST(s00_axis_tlast),
 		.S_AXIS_TVALID(s00_axis_tvalid),
 		.S_AXIS_NUM_DMA_SYMBOL_raw(slv_reg8[12:0]),
-		
 		.s_axis_recv_data_from_high(s_axis_recv_data_from_high),
-		
 		.tx_queue_idx_indication_from_ps(slv_reg8[19:18]),
 		.tx_queue_idx(tx_queue_idx),
-		.endless_mode(0),
+        // MODIFIED: Corrected port width mismatch
+		.endless_mode(1'b0),
 		.data_count0(s_axis_fifo_data_count0),
 		.data_count1(s_axis_fifo_data_count1),
 		.data_count2(s_axis_fifo_data_count2),
 		.data_count3(s_axis_fifo_data_count3),
-        .DATA_TO_ACC(s_axis_data_to_acc),
-        .EMPTYN_TO_ACC(s_axis_emptyn_to_acc),
-        .ACC_ASK_DATA(acc_ask_data_from_s_axis&(~slv_reg10[0]))
+    .DATA_TO_ACC(s_axis_data_to_acc),
+    .EMPTYN_TO_ACC(s_axis_emptyn_to_acc),
+    .ACC_ASK_DATA(acc_ask_data_from_s_axis&(~slv_reg10[0]))
 	);
 
   tx_interrupt_selection tx_interrupt_selection_i (
-    // selection
     .src_sel(slv_reg14[2:0]),
-    // src
     .s00_axis_tlast(s00_axis_tlast),
     .phy_tx_start(phy_tx_start),
     .tx_start_from_acc(tx_start_from_acc),
     .tx_end_from_acc(tx_end_from_acc),
     .tx_try_complete(tx_try_complete),
-
-    // to ps interrupt
     .tx_itrpt(tx_itrpt_internal)
 	);
 
@@ -476,18 +400,13 @@ module tx_intf #
   ) tx_bit_intf_i (
     .rstn(s00_axis_aresetn&(~slv_reg0[6])),
     .clk(s00_axis_aclk),
-
     .fcs_in_strobe(fcs_in_strobe),
-    
-    // recv bits from s_axis
     .tx_queue_idx(tx_queue_idx),
     .linux_prio(linux_prio),
     .pkt_cnt(pkt_cnt),
     .data_from_s_axis(s_axis_data_to_acc),
     .ask_data_from_s_axis(tx_bit_intf_acc_ask_data_from_s_axis),
     .emptyn_from_s_axis(s_axis_emptyn_to_acc),
-    
-    // src indication
     .auto_start_mode(phy_tx_auto_start_mode),
     .num_dma_symbol_th(phy_tx_auto_start_num_dma_symbol_th),
     .tx_config(slv_reg8),
@@ -496,46 +415,40 @@ module tx_intf #
     .ampdu_action_config(slv_reg15),
     .s_axis_recv_data_from_high(s_axis_recv_data_from_high),
     .start(phy_tx_start),
-
-        .tx_config_fifo_data_count0(tx_config_fifo_data_count0), 
-        .tx_config_fifo_data_count1(tx_config_fifo_data_count1),
-        .tx_config_fifo_data_count2(tx_config_fifo_data_count2), 
-        .tx_config_fifo_data_count3(tx_config_fifo_data_count3),
-
-        .tx_iq_fifo_empty(tx_iq_fifo_empty),
-        .cts_toself_config(slv_reg4),
-        .send_cts_toself_wait_sifs_top(send_cts_toself_wait_sifs_top),
-        .mac_addr(mac_addr),
-        .tx_try_complete(tx_try_complete),
-        .retrans_in_progress(retrans_in_progress),
-        .start_retrans(start_retrans),
-        .start_tx_ack(start_tx_ack),
-        .slice_en(slice_en),
-        .backoff_done(backoff_done),
-        .tx_bb_is_ongoing(tx_bb_is_ongoing),
-        .ack_tx_flag(ack_tx_flag),
-        .wea_from_xpu(wea_from_xpu),
-        .addra_from_xpu(addra_from_xpu),
-        .dina_from_xpu(dina_from_xpu),
-        .tx_pkt_need_ack(tx_pkt_need_ack),
-        .tx_pkt_retrans_limit(tx_pkt_retrans_limit),
-        .use_ht_aggr(use_ht_aggr),
-        .quit_retrans(quit_retrans),
-        .reset_backoff(reset_backoff),
-        .high_trigger(high_trigger),
-        .tx_control_state_idle(tx_control_state_idle),
-        .bd_wr_idx(bd_wr_idx),
-        // .tx_pkt_num_dma_byte(tx_pkt_num_dma_byte),
-        .douta(douta),
-        .cts_toself_bb_is_ongoing(cts_toself_bb_is_ongoing),
-        .cts_toself_rf_is_ongoing(cts_toself_rf_is_ongoing),
-         
-         // to send out to wifi tx module
-        .tx_end_from_acc(tx_end_from_acc),
-        .bram_data_to_acc(data_to_acc),
-        .bram_addr(bram_addr),
-
-        .tsf_pulse_1M(tsf_pulse_1M)
+    .tx_config_fifo_data_count0(tx_config_fifo_data_count0), 
+    .tx_config_fifo_data_count1(tx_config_fifo_data_count1),
+    .tx_config_fifo_data_count2(tx_config_fifo_data_count2), 
+    .tx_config_fifo_data_count3(tx_config_fifo_data_count3),
+    .tx_iq_fifo_empty(tx_iq_fifo_empty),
+    .cts_toself_config(slv_reg4),
+    .send_cts_toself_wait_sifs_top(send_cts_toself_wait_sifs_top),
+    .mac_addr(mac_addr),
+    .tx_try_complete(tx_try_complete),
+    .retrans_in_progress(retrans_in_progress),
+    .start_retrans(start_retrans),
+    .start_tx_ack(start_tx_ack),
+    .slice_en(slice_en),
+    .backoff_done(backoff_done),
+    .tx_bb_is_ongoing(tx_bb_is_ongoing),
+    .ack_tx_flag(ack_tx_flag),
+    .wea_from_xpu(wea_from_xpu),
+    .addra_from_xpu(addra_from_xpu),
+    .dina_from_xpu(dina_from_xpu),
+    .tx_pkt_need_ack(tx_pkt_need_ack),
+    .tx_pkt_retrans_limit(tx_pkt_retrans_limit),
+    .use_ht_aggr(use_ht_aggr),
+    .quit_retrans(quit_retrans),
+    .reset_backoff(reset_backoff),
+    .high_trigger(high_trigger),
+    .tx_control_state_idle(tx_control_state_idle),
+    .bd_wr_idx(bd_wr_idx),
+    .douta(douta),
+    .cts_toself_bb_is_ongoing(cts_toself_bb_is_ongoing),
+    .cts_toself_rf_is_ongoing(cts_toself_rf_is_ongoing),
+    .tx_end_from_acc(tx_end_from_acc),
+    .bram_data_to_acc(data_to_acc),
+    .bram_addr(bram_addr),
+    .tsf_pulse_1M(tsf_pulse_1M)
     );
 
     tx_iq_intf # (
@@ -545,30 +458,23 @@ module tx_intf #
     ) tx_iq_intf_i (
         .rstn(s00_axis_aresetn&(~slv_reg0[3])),
         .clk(s00_axis_aclk),
-        // to duc
         .wifi_iq_pack(wifi_iq_pack),
         .wifi_iq_ready(wifi_iq_ready),
         .wifi_iq_valid(wifi_iq_valid),
-
         .tx_hold_threshold(slv_reg12[9:0]),
         .bb_gain(slv_reg13[9:0]),
         .bb_gain1(slv_reg5[(CSI_FUZZER_WIDTH-1):0]),
         .bb_gain1_rot90_flag(slv_reg5[9]),
         .bb_gain2(slv_reg5[(10+CSI_FUZZER_WIDTH-1):10]),
         .bb_gain2_rot90_flag(slv_reg5[19]),
-        // iq generated by outside wifi tx module
         .rf_i(rf_i_from_acc),
         .rf_q(rf_q_from_acc),
         .rf_iq_valid(rf_iq_valid_from_acc),
-
-        // arbitrary I/Q interface
         .tx_arbitrary_iq_mode(slv_reg7[0]),
         .tx_arbitrary_iq_tx_trigger(slv_reg7[1]),
-        .tx_arbitrary_iq_in(slv_reg1), // has to be register 1! -- by slv_reg_wren&axi_awaddr_core in tx_iq_intf
+        .tx_arbitrary_iq_in(slv_reg1),
         .slv_reg_wren(slv_reg_wren),
         .axi_awaddr_core(axi_awaddr_core),
-
-        // some handshake
         .tx_iq_fifo_empty(tx_iq_fifo_empty),
         .tx_hold(tx_hold)
     );
