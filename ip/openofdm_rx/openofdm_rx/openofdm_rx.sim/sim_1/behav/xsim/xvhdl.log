@@ -1,0 +1,10 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/div_gen_csi_over_nova/sim/div_gen_csi_over_nova.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'div_gen_csi_over_nova'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/complex_multiplier/sim/complex_multiplier.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'complex_multiplier'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/div_gen_new/src/div_gen_div_gen_0_0/sim/div_gen_div_gen_0_0.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'div_gen_div_gen_0_0'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/div_for_rotafft/sim/div_for_rotafft.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'div_for_rotafft'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/xfft/sim/xfft_v9.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'xfft_v9'

@@ -1,0 +1,92 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/deinter_lut/sim/deinter_lut.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module deinter_lut
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/div_gen_new/src/div_gen_xlslice_0_0/sim/div_gen_xlslice_0_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module div_gen_xlslice_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/atan_lut/sim/atan_lut.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module atan_lut
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/rot_lut/sim/rot_lut.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module rot_lut
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/bits_to_bytes.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module bits_to_bytes
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/calc_mean.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module calc_mean
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/complex_mult.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module complex_mult
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/complex_to_mag.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module complex_to_mag
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/complex_to_mag_sq.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module complex_to_mag_sq
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/crc32.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module crc32
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/deinterleave.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module deinterleave
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/delayT.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module delayT
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/demodulate.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module demodulate
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/descramble.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module descramble
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/div_gen_new/src/div_gen.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module div_gen
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/divider.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module divider
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/dot11.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dot11
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/dpram.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dpram
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/equalizer.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module equalizer
+INFO: [VRFC 10-2458] undeclared symbol pilot_out_stb, assumed default net type wire [C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/equalizer.v:338]
+INFO: [VRFC 10-2458] undeclared symbol rot_out_stb, assumed default net type wire [C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/equalizer.v:356]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/fifo_sample_delay.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_sample_delay
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/ht_sig_crc.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ht_sig_crc
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/mv_avg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mv_avg
+INFO: [VRFC 10-2458] undeclared symbol empty, assumed default net type wire [C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/mv_avg.v:62]
+INFO: [VRFC 10-2458] undeclared symbol full, assumed default net type wire [C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/mv_avg.v:63]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/mv_avg_dual_ch.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mv_avg_dual_ch
+INFO: [VRFC 10-2458] undeclared symbol empty, assumed default net type wire [C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/mv_avg_dual_ch.v:72]
+INFO: [VRFC 10-2458] undeclared symbol full, assumed default net type wire [C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/mv_avg_dual_ch.v:73]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/ofdm_decoder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ofdm_decoder
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/phase.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module phase
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/phy_len_calculation.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module phy_len_calculation
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/rot_after_fft.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module rot_after_fft
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/rotate.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module rotate
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/running_sum_dual_ch.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module running_sum_dual_ch
+INFO: [VRFC 10-2458] undeclared symbol empty, assumed default net type wire [C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/running_sum_dual_ch.v:61]
+INFO: [VRFC 10-2458] undeclared symbol full, assumed default net type wire [C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/running_sum_dual_ch.v:62]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/signal_watchdog.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module signal_watchdog
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/stage_mult.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module stage_mult
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/sync_long.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sync_long
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/sync_short.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sync_short
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/viterbi_v7_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module viterbi_v7_0
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/verilog/dot11_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dot11_tb
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/openofdm_rx/openofdm_rx.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
+WARNING: [VRFC 10-3609] overwriting previous definition of module 'glbl' [C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/openofdm_rx/openofdm_rx.sim/sim_1/behav/xsim/glbl.v:6]
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/div_gen_csi_over_nova/sim/div_gen_csi_over_nova.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'div_gen_csi_over_nova'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/complex_multiplier/sim/complex_multiplier.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'complex_multiplier'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/div_gen_new/src/div_gen_div_gen_0_0/sim/div_gen_div_gen_0_0.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'div_gen_div_gen_0_0'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/div_for_rotafft/sim/div_for_rotafft.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'div_for_rotafft'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/ip_repo/xfft/sim/xfft_v9.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'xfft_v9'

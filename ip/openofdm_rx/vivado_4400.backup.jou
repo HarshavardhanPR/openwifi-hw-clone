@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2021.1 (64-bit)
+# SW Build 3247384 on Thu Jun 10 19:36:33 MDT 2021
+# IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+# Start of session at: Tue Jul 22 21:44:13 2025
+# Process ID: 4400
+# Current directory: C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi
+# Command line: vivado.exe -source openofdm_rx.tcl -tclargs zed_fmcs2 100
+# Log file: C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi/vivado.log
+# Journal file: C:/Users/ASUS/Downloads/Openofdm/openofdm-dot11zynq/Wifi\vivado.jou
+#-----------------------------------------------------------
+start_gui
+source openofdm_rx.tcl
