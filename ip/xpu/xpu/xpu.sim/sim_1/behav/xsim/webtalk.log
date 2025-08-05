@@ -2,12 +2,12 @@
 # Webtalk v2021.1 (64-bit)
 # SW Build 3247384 on Thu Jun 10 19:36:33 MDT 2021
 # IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
-# Start of session at: Fri Jul 25 09:48:50 2025
-# Process ID: 24528
+# Start of session at: Mon Aug  4 17:32:34 2025
+# Process ID: 26504
 # Current directory: C:/SPB_Data/openwifi-hw/ip/xpu/xpu/xpu.sim/sim_1/behav/xsim
-# Command line: wbtcv.exe -mode batch -source C:/SPB_Data/openwifi-hw/ip/xpu/xpu/xpu.sim/sim_1/behav/xsim/xsim.dir/mv_avg_tb_behav/webtalk/xsim_webtalk.tcl -notrace
+# Command line: wbtcv.exe -mode batch -source C:/SPB_Data/openwifi-hw/ip/xpu/xpu/xpu.sim/sim_1/behav/xsim/xsim.dir/xpu_tb_behav/webtalk/xsim_webtalk.tcl -notrace
 # Log file: C:/SPB_Data/openwifi-hw/ip/xpu/xpu/xpu.sim/sim_1/behav/xsim/webtalk.log
 # Journal file: C:/SPB_Data/openwifi-hw/ip/xpu/xpu/xpu.sim/sim_1/behav/xsim\webtalk.jou
 #-----------------------------------------------------------
-source C:/SPB_Data/openwifi-hw/ip/xpu/xpu/xpu.sim/sim_1/behav/xsim/xsim.dir/mv_avg_tb_behav/webtalk/xsim_webtalk.tcl -notrace
-INFO: [Common 17-206] Exiting Webtalk at Fri Jul 25 09:48:52 2025...
+source C:/SPB_Data/openwifi-hw/ip/xpu/xpu/xpu.sim/sim_1/behav/xsim/xsim.dir/xpu_tb_behav/webtalk/xsim_webtalk.tcl -notrace
+INFO: [Common 17-206] Exiting Webtalk at Mon Aug  4 17:32:35 2025...

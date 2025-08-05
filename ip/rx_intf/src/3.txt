@@ -1,0 +1,2807 @@
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+
+`timescale 1 ns / 1 ps
+
+	module adc_intf #
+	(
+		parameter integer IQ_DATA_WIDTH = 16
+	)
+	(
+    input wire adc_rst,
+    input wire adc_clk,
+    input wire [(4*IQ_DATA_WIDTH-1) : 0] adc_data,
+    //input wire adc_sync,
+    input wire adc_valid,
+    input wire acc_clk,
+    input wire acc_rstn,
+
+    input wire [2:0] bb_gain,
+    output reg [(4*IQ_DATA_WIDTH-1) : 0] data_to_bb,
+    output wire emptyn_to_bb,
+    input wire bb_ask_data
+	);
+    wire FULL_internal;
+    wire EMPTY_internal;
+   //  wire RST_internal;
+    wire [(4*IQ_DATA_WIDTH-1) : 0] data_to_acc_internal;
+    
+    reg [(4*IQ_DATA_WIDTH-1) : 0] adc_data_delay;
+    reg adc_valid_count;
+    wire adc_valid_decimate;
+
+// // ---------for debug purpose------------
+//     (* mark_debug = "true" *) reg adc_clk_in_bb_domain;
+//     (* mark_debug = "true" *) reg adc_valid_in_bb_domain;
+//     (* mark_debug = "true" *) reg FULL_internal_in_bb_domain;
+//     (* mark_debug = "true" *) reg [3:0] wren_count;
+//     (* mark_debug = "true" *) reg [3:0] rden_count;
+//     reg adc_valid_decimate_reg;
+//     wire valid;
+//     reg  valid_reg;
+//     assign valid = (!EMPTY_internal);
+//     always @( posedge acc_clk )
+//     begin
+//       if ( acc_rstn == 1'b0 ) begin
+//         adc_clk_in_bb_domain <= 0;
+//         adc_valid_in_bb_domain <= 0;
+//         FULL_internal_in_bb_domain <= 0;
+//         wren_count <= 0;
+//         rden_count <= 0;
+//         adc_valid_decimate_reg <= 0;
+//         valid_reg <= 0;
+//       end
+//       else begin
+//         adc_clk_in_bb_domain <= adc_clk;
+//         adc_valid_in_bb_domain <= adc_valid;
+//         FULL_internal_in_bb_domain <= FULL_internal;
+//         adc_valid_decimate_reg <= adc_valid_decimate;
+//         valid_reg <= valid;
+//         if (adc_valid_decimate==1 && adc_valid_decimate_reg==0)
+//           wren_count <= 0;
+//         else
+//           wren_count <= wren_count + 1;
+
+//         if (valid==1 && valid_reg==0)
+//           rden_count <= 0;
+//         else
+//           rden_count <= rden_count + 1;
+//       end
+//     end
+// // ------------end of debug----------
+
+    assign adc_valid_decimate = (adc_valid_count==1);
+
+   //  assign RST_internal = (!acc_rstn);
+    assign emptyn_to_bb = (!EMPTY_internal);
+
+    always @( bb_gain, data_to_acc_internal)
+    begin
+       case (bb_gain)
+          3'b000 : begin
+                        data_to_bb[((1*IQ_DATA_WIDTH)-1) : (0*IQ_DATA_WIDTH)] = data_to_acc_internal[((1*IQ_DATA_WIDTH)-1) : (0*IQ_DATA_WIDTH)];
+                        data_to_bb[((2*IQ_DATA_WIDTH)-1) : (1*IQ_DATA_WIDTH)] = data_to_acc_internal[((2*IQ_DATA_WIDTH)-1) : (1*IQ_DATA_WIDTH)];
+                        data_to_bb[((3*IQ_DATA_WIDTH)-1) : (2*IQ_DATA_WIDTH)] = data_to_acc_internal[((3*IQ_DATA_WIDTH)-1) : (2*IQ_DATA_WIDTH)];
+                        data_to_bb[((4*IQ_DATA_WIDTH)-1) : (3*IQ_DATA_WIDTH)] = data_to_acc_internal[((4*IQ_DATA_WIDTH)-1) : (3*IQ_DATA_WIDTH)];
+                   end
+          3'b001 : begin
+                        data_to_bb[((1*IQ_DATA_WIDTH)-1) : (0*IQ_DATA_WIDTH)] = {data_to_acc_internal[((1*IQ_DATA_WIDTH)-2) : (0*IQ_DATA_WIDTH)], 1'd0};
+                        data_to_bb[((2*IQ_DATA_WIDTH)-1) : (1*IQ_DATA_WIDTH)] = {data_to_acc_internal[((2*IQ_DATA_WIDTH)-2) : (1*IQ_DATA_WIDTH)], 1'd0};
+                        data_to_bb[((3*IQ_DATA_WIDTH)-1) : (2*IQ_DATA_WIDTH)] = {data_to_acc_internal[((3*IQ_DATA_WIDTH)-2) : (2*IQ_DATA_WIDTH)], 1'd0};
+                        data_to_bb[((4*IQ_DATA_WIDTH)-1) : (3*IQ_DATA_WIDTH)] = {data_to_acc_internal[((4*IQ_DATA_WIDTH)-2) : (3*IQ_DATA_WIDTH)], 1'd0};
+                   end
+          3'b010 : begin
+                        data_to_bb[((1*IQ_DATA_WIDTH)-1) : (0*IQ_DATA_WIDTH)] = {data_to_acc_internal[((1*IQ_DATA_WIDTH)-3) : (0*IQ_DATA_WIDTH)], 2'd0};
+                        data_to_bb[((2*IQ_DATA_WIDTH)-1) : (1*IQ_DATA_WIDTH)] = {data_to_acc_internal[((2*IQ_DATA_WIDTH)-3) : (1*IQ_DATA_WIDTH)], 2'd0};
+                        data_to_bb[((3*IQ_DATA_WIDTH)-1) : (2*IQ_DATA_WIDTH)] = {data_to_acc_internal[((3*IQ_DATA_WIDTH)-3) : (2*IQ_DATA_WIDTH)], 2'd0};
+                        data_to_bb[((4*IQ_DATA_WIDTH)-1) : (3*IQ_DATA_WIDTH)] = {data_to_acc_internal[((4*IQ_DATA_WIDTH)-3) : (3*IQ_DATA_WIDTH)], 2'd0};
+                   end
+          3'b011 : begin
+                        data_to_bb[((1*IQ_DATA_WIDTH)-1) : (0*IQ_DATA_WIDTH)] = {data_to_acc_internal[((1*IQ_DATA_WIDTH)-4) : (0*IQ_DATA_WIDTH)], 3'd0};
+                        data_to_bb[((2*IQ_DATA_WIDTH)-1) : (1*IQ_DATA_WIDTH)] = {data_to_acc_internal[((2*IQ_DATA_WIDTH)-4) : (1*IQ_DATA_WIDTH)], 3'd0};
+                        data_to_bb[((3*IQ_DATA_WIDTH)-1) : (2*IQ_DATA_WIDTH)] = {data_to_acc_internal[((3*IQ_DATA_WIDTH)-4) : (2*IQ_DATA_WIDTH)], 3'd0};
+                        data_to_bb[((4*IQ_DATA_WIDTH)-1) : (3*IQ_DATA_WIDTH)] = {data_to_acc_internal[((4*IQ_DATA_WIDTH)-4) : (3*IQ_DATA_WIDTH)], 3'd0};
+                   end
+          3'b100 : begin
+                        data_to_bb[((1*IQ_DATA_WIDTH)-1) : (0*IQ_DATA_WIDTH)] = {data_to_acc_internal[((1*IQ_DATA_WIDTH)-5) : (0*IQ_DATA_WIDTH)], 4'd0};
+                        data_to_bb[((2*IQ_DATA_WIDTH)-1) : (1*IQ_DATA_WIDTH)] = {data_to_acc_internal[((2*IQ_DATA_WIDTH)-5) : (1*IQ_DATA_WIDTH)], 4'd0};
+                        data_to_bb[((3*IQ_DATA_WIDTH)-1) : (2*IQ_DATA_WIDTH)] = {data_to_acc_internal[((3*IQ_DATA_WIDTH)-5) : (2*IQ_DATA_WIDTH)], 4'd0};
+                        data_to_bb[((4*IQ_DATA_WIDTH)-1) : (3*IQ_DATA_WIDTH)] = {data_to_acc_internal[((4*IQ_DATA_WIDTH)-5) : (3*IQ_DATA_WIDTH)], 4'd0};
+                   end
+          default: begin
+                        data_to_bb[((1*IQ_DATA_WIDTH)-1) : (0*IQ_DATA_WIDTH)] = data_to_acc_internal[((1*IQ_DATA_WIDTH)-1) : (0*IQ_DATA_WIDTH)];
+                        data_to_bb[((2*IQ_DATA_WIDTH)-1) : (1*IQ_DATA_WIDTH)] = data_to_acc_internal[((2*IQ_DATA_WIDTH)-1) : (1*IQ_DATA_WIDTH)];
+                        data_to_bb[((3*IQ_DATA_WIDTH)-1) : (2*IQ_DATA_WIDTH)] = data_to_acc_internal[((3*IQ_DATA_WIDTH)-1) : (2*IQ_DATA_WIDTH)];
+                        data_to_bb[((4*IQ_DATA_WIDTH)-1) : (3*IQ_DATA_WIDTH)] = data_to_acc_internal[((4*IQ_DATA_WIDTH)-1) : (3*IQ_DATA_WIDTH)];
+                   end
+       endcase
+    end
+
+    //decimate input by 2: 40Msps --> 20Msps
+    always @( posedge adc_clk )
+    begin
+      if ( adc_rst == 1 ) begin
+        adc_valid_count <= 0;
+        adc_data_delay    <= 0;
+      end
+      else begin
+        adc_data_delay <= adc_data;
+        if (adc_valid == 1)
+          adc_valid_count <= adc_valid_count + 1;
+      end
+    end
+
+    // fifo32_2clk_dep32 fifo32_2clk_dep32_i
+    //        (.DATAO(data_to_acc_internal),
+    //         .DI(adc_data_delay),
+    //         .EMPTY(EMPTY_internal),
+    //         .FULL(FULL_internal),
+    //         .RDCLK(acc_clk),
+    //         .RDEN(bb_ask_data),
+    //         .RD_DATA_COUNT(),
+    //         .RST(RST_internal),
+    //         .WRCLK(adc_clk),
+    //         .WREN(adc_valid_decimate),
+    //         .WR_DATA_COUNT());
+
+   xpm_fifo_async #(
+      .CDC_SYNC_STAGES(2),       // DECIMAL
+      .DOUT_RESET_VALUE("0"),    // String
+      .ECC_MODE("no_ecc"),       // String
+      .FIFO_MEMORY_TYPE("auto"), // String
+      .FIFO_READ_LATENCY(0),     // DECIMAL
+      .FIFO_WRITE_DEPTH(32),   // DECIMAL
+      .FULL_RESET_VALUE(0),      // DECIMAL
+      .PROG_EMPTY_THRESH(10),    // DECIMAL
+      .PROG_FULL_THRESH(10),     // DECIMAL
+      .RD_DATA_COUNT_WIDTH(5),   // DECIMAL
+      .READ_DATA_WIDTH(64),      // DECIMAL
+      .READ_MODE("fwft"),         // String
+      .RELATED_CLOCKS(0),        // DECIMAL
+      .USE_ADV_FEATURES("0404"), // String
+      .WAKEUP_TIME(0),           // DECIMAL
+      .WRITE_DATA_WIDTH(64),     // DECIMAL
+      .WR_DATA_COUNT_WIDTH(5)    // DECIMAL
+   )
+   xpm_fifo_async_adc_intf (
+      .almost_empty(),
+      .almost_full(),     // 1-bit output: Almost Full: When asserted, this signal indicates that
+      .data_valid(),       // 1-bit output: Read Data Valid: When asserted, this signal indicates
+      .dbiterr(),             // 1-bit output: Double Bit Error: Indicates that the ECC decoder detected
+      .dout(data_to_acc_internal),                   // READ_DATA_WIDTH-bit output: Read Data: The output data bus is driven
+      .empty(EMPTY_internal),                 // 1-bit output: Empty Flag: When asserted, this signal indicates that the
+      .full(FULL_internal),                   // 1-bit output: Full Flag: When asserted, this signal indicates that the
+      .overflow(),           // 1-bit output: Overflow: This signal indicates that a write request
+      .prog_empty(),       // 1-bit output: Programmable Empty: This signal is asserted when the
+      .prog_full(),         // 1-bit output: Programmable Full: This signal is asserted when the
+      .rd_data_count(), // RD_DATA_COUNT_WIDTH-bit output: Read Data Count: This bus indicates the
+      .rd_rst_busy(),     // 1-bit output: Read Reset Busy: Active-High indicator that the FIFO read
+      .sbiterr(),             // 1-bit output: Single Bit Error: Indicates that the ECC decoder detected
+      .underflow(),         // 1-bit output: Underflow: Indicates that the read request (rd_en) during
+      .wr_ack(),               // 1-bit output: Write Acknowledge: This signal indicates that a write
+      .wr_data_count(), // WR_DATA_COUNT_WIDTH-bit output: Write Data Count: This bus indicates
+      .wr_rst_busy(),     // 1-bit output: Write Reset Busy: Active-High indicator that the FIFO
+      .din(adc_data_delay),                     // WRITE_DATA_WIDTH-bit input: Write Data: The input data bus used when
+      .injectdbiterr(), // 1-bit input: Double Bit Error Injection: Injects a double bit error if
+      .injectsbiterr(), // 1-bit input: Single Bit Error Injection: Injects a single bit error if
+      .rd_clk(acc_clk),               // 1-bit input: Read clock: Used for read operation. rd_clk must be a free
+      .rd_en(bb_ask_data),                 // 1-bit input: Read Enable: If the FIFO is not empty, asserting this
+      .rst(adc_rst),                     // 1-bit input: Reset: Must be synchronous to wr_clk. The clock(s) can be
+      .sleep(),                 // 1-bit input: Dynamic power saving: If sleep is High, the memory/fifo
+      .wr_clk(adc_clk),               // 1-bit input: Write clock: Used for write operation. wr_clk must be a
+      .wr_en(adc_valid_decimate)                  // 1-bit input: Write Enable: If the FIFO is not full, asserting this
+   );
+
+	endmodule
+
+
+=======================================================================================================================
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+// board specific definitions
+
+// clock_speed.v has NUM_CLK_PER_US. The value is determined by .tcl (_high.tcl or _low.tcl)
+//`define NUM_CLK_PER_US         250 // 250MHz clock for ultrascale+ FPGA
+//`define NUM_CLK_PER_US         200 // 200MHz clock for fast FPGA, like -2 and above grade Zynq7000
+//`define NUM_CLK_PER_US         100 // 100MHz clock for slow FPGA, like -1 grade Zynq7000
+
+`define SAMPLING_RATE_MHZ       20
+`define ASSUMED_COUNTER_CLK_MHZ 10  // 10MHz is assumed in SW/driver for sub us resolutuion FPGA counters
+`define NUM_CLK_PER_SAMPLE     ((`NUM_CLK_PER_US)/`SAMPLING_RATE_MHZ)
+`define COUNT_TOP_1M           ((`NUM_CLK_PER_US)-1)
+`define COUNT_SCALE            ((`NUM_CLK_PER_US)/(`ASSUMED_COUNTER_CLK_MHZ))
+
+=======================================================================================================================
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+
+module byte_to_word_fcs_sn_insert
+(
+    input wire clk,
+    input wire rstn,
+    input wire rstn_sn,
+
+    input [7:0]  byte_in,
+    input        byte_in_strobe,
+    input [15:0] byte_count,
+    input [15:0] num_byte,
+    input fcs_in_strobe,
+    input fcs_ok,
+    input wire rx_pkt_sn_plus_one,
+
+    output reg [63:0] word_out,
+    output reg word_out_strobe
+);
+
+reg [63:0] byte_buf;
+
+reg [7:0] byte_in_dly0;
+reg [7:0] byte_in_dly1;
+reg byte_in_strobe_dly0;
+reg byte_in_strobe_dly1;
+reg [15:0] byte_count_dly0;
+reg [15:0] byte_count_dly1;
+reg [6:0] rx_pkt_sn;
+
+wire [7:0] byte_in_final;
+wire byte_in_strobe_final;
+wire [15:0] byte_count_final;
+
+assign byte_in_final = (fcs_in_strobe?{fcs_ok,rx_pkt_sn}:byte_in_dly1);
+assign byte_in_strobe_final = byte_in_strobe_dly1;
+assign byte_count_final = byte_count_dly1;
+
+always @(posedge clk) begin
+    if (rstn_sn==1'b0) begin
+        rx_pkt_sn<=0;
+    end else  begin
+        rx_pkt_sn <= (rx_pkt_sn_plus_one?(rx_pkt_sn+1):rx_pkt_sn);
+    end 
+end
+
+// delay and select to insert fcs
+always @(posedge clk) begin
+    if (rstn==1'b0) begin
+        byte_in_dly0<=0;
+        byte_in_dly1<=0;
+        byte_in_strobe_dly0<=0;
+        byte_in_strobe_dly1<=0;
+        byte_count_dly0<=0;
+        byte_count_dly1<=0;
+    end else  begin
+        byte_in_dly0<=byte_in;
+        byte_in_dly1<=byte_in_dly0;
+        byte_in_strobe_dly0<=byte_in_strobe;
+        byte_in_strobe_dly1<=byte_in_strobe_dly0;
+        byte_count_dly0<=byte_count;
+        byte_count_dly1<=byte_count_dly0;
+    end 
+end
+
+// byte to word
+always @(posedge clk) begin
+    if (rstn==1'b0) begin
+        byte_buf <= 0;
+        word_out <= 0;
+        word_out_strobe <= 0;
+    end else if (byte_in_strobe_final) begin
+        byte_buf[63:56] <= byte_in_final;
+        byte_buf[55:0] <= byte_buf[63:8];
+        word_out_strobe <= (byte_count_final[2:0]==7?1:0);
+        word_out <= byte_count_final[2:0]==7?{byte_in_final, byte_buf[63:8]}:word_out;
+    end else if (byte_count_final==num_byte) begin
+        word_out_strobe <= (byte_count_final[2:0]==0?0:1);
+        case (byte_count_final[2:0])
+            3'b001: begin word_out <= {56'b0,byte_buf[63:56]}; end
+            3'b010: begin word_out <= {48'b0,byte_buf[63:48]}; end
+            3'b011: begin word_out <= {40'b0,byte_buf[63:40]}; end
+            3'b100: begin word_out <= {32'b0,byte_buf[63:32]}; end
+            3'b101: begin word_out <= {24'b0,byte_buf[63:24]}; end
+            3'b110: begin word_out <= {16'b0,byte_buf[63:16]}; end
+            3'b111: begin word_out <= { 8'b0,byte_buf[63: 8]}; end
+            default: word_out <= word_out;
+        endcase
+    end else begin
+        word_out_strobe <= 0;
+    end
+end
+endmodule
+
+=======================================================================================================================
+
+
+`define NUM_CLK_PER_US 100
+
+=======================================================================================================================
+
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+
+module edge_to_flip
+#(
+    parameter TEMP0 = 16,
+    parameter TEMP1 = 5
+)
+(
+    input clk,
+    input rstn,
+
+    input data_in,
+    output reg flip_output
+);
+
+reg data_in_reg;
+always @(posedge clk) begin
+    if (~rstn) begin
+        data_in_reg <= 0;
+        flip_output <= 0;
+    end else begin
+        data_in_reg <= data_in;
+        flip_output <= ((data_in==1 && data_in_reg==0)?(~flip_output):flip_output);
+    end
+end
+
+endmodule
+
+
+=======================================================================================================================
+
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+
+`timescale 1 ns / 1 ps
+
+	module gpio_status_rf_to_bb #
+	(
+		parameter integer GPIO_STATUS_WIDTH = 8
+	)
+	(
+      input  wire rf_rst,
+      input  wire rf_clk,
+      input  wire [(GPIO_STATUS_WIDTH-1):0] gpio_status_rf,
+
+      input  wire bb_rstn,
+      input  wire bb_clk,
+      input  wire bb_iq_valid,
+      output wire [(GPIO_STATUS_WIDTH-1):0] gpio_status_bb
+	);
+// -----------for debug-----------------------------
+   wire [(GPIO_STATUS_WIDTH-2):0] gpio_status_gain;
+   wire gpio_status_lock;
+
+   assign gpio_status_gain = gpio_status_rf[(GPIO_STATUS_WIDTH-2):0];
+   assign gpio_status_lock = gpio_status_rf[GPIO_STATUS_WIDTH-1];
+// ----------end of for debug-----------------------
+   
+   wire [(GPIO_STATUS_WIDTH-1):0] gpio_status_tmp;
+   wire [(GPIO_STATUS_WIDTH-1):0] agc_gain_mv_avg;
+   wire [1:0] agc_lock_mv_avg;
+
+   assign gpio_status_bb = {~agc_lock_mv_avg[0], agc_gain_mv_avg[(GPIO_STATUS_WIDTH-2):0]};
+
+   xpm_fifo_async #(
+      .CDC_SYNC_STAGES(2),       // DECIMAL
+      .DOUT_RESET_VALUE("0"),    // String
+      .ECC_MODE("no_ecc"),       // String
+      .FIFO_MEMORY_TYPE("auto"), // String
+      .FIFO_READ_LATENCY(1),     // DECIMAL
+      .FIFO_WRITE_DEPTH(16),   // DECIMAL
+      .FULL_RESET_VALUE(0),      // DECIMAL
+      .PROG_EMPTY_THRESH(10),    // DECIMAL
+      .PROG_FULL_THRESH(10),     // DECIMAL
+      .RD_DATA_COUNT_WIDTH(5),   // DECIMAL
+      .READ_DATA_WIDTH(GPIO_STATUS_WIDTH),      // DECIMAL
+      .READ_MODE("std"),         // String
+      .RELATED_CLOCKS(0),        // DECIMAL
+      .USE_ADV_FEATURES("0000"), // String
+      .WAKEUP_TIME(0),           // DECIMAL
+      .WRITE_DATA_WIDTH(GPIO_STATUS_WIDTH),     // DECIMAL
+      .WR_DATA_COUNT_WIDTH(5)    // DECIMAL
+   )
+   xpm_fifo_async_gpio_status_rf_to_bb (
+      .almost_empty(),
+      .almost_full(),     // 1-bit output: Almost Full: When asserted, this signal indicates that
+      .data_valid(),       // 1-bit output: Read Data Valid: When asserted, this signal indicates
+      .dbiterr(),             // 1-bit output: Double Bit Error: Indicates that the ECC decoder detected
+      .dout(gpio_status_tmp),                   // READ_DATA_WIDTH-bit output: Read Data: The output data bus is driven
+      .empty(),                 // 1-bit output: Empty Flag: When asserted, this signal indicates that the
+      .full(),                   // 1-bit output: Full Flag: When asserted, this signal indicates that the
+      .overflow(),           // 1-bit output: Overflow: This signal indicates that a write request
+      .prog_empty(),       // 1-bit output: Programmable Empty: This signal is asserted when the
+      .prog_full(),         // 1-bit output: Programmable Full: This signal is asserted when the
+      .rd_data_count(), // RD_DATA_COUNT_WIDTH-bit output: Read Data Count: This bus indicates the
+      .rd_rst_busy(),     // 1-bit output: Read Reset Busy: Active-High indicator that the FIFO read
+      .sbiterr(),             // 1-bit output: Single Bit Error: Indicates that the ECC decoder detected
+      .underflow(),         // 1-bit output: Underflow: Indicates that the read request (rd_en) during
+      .wr_ack(),               // 1-bit output: Write Acknowledge: This signal indicates that a write
+      .wr_data_count(), // WR_DATA_COUNT_WIDTH-bit output: Write Data Count: This bus indicates
+      .wr_rst_busy(),     // 1-bit output: Write Reset Busy: Active-High indicator that the FIFO
+      .din(gpio_status_rf),                     // WRITE_DATA_WIDTH-bit input: Write Data: The input data bus used when
+      .injectdbiterr(), // 1-bit input: Double Bit Error Injection: Injects a double bit error if
+      .injectsbiterr(), // 1-bit input: Single Bit Error Injection: Injects a single bit error if
+      .rd_clk(bb_clk),               // 1-bit input: Read clock: Used for read operation. rd_clk must be a free
+      .rd_en(1),                 // 1-bit input: Read Enable: If the FIFO is not empty, asserting this
+      .rst(rf_rst),                     // 1-bit input: Reset: Must be synchronous to wr_clk. The clock(s) can be
+      .sleep(),                 // 1-bit input: Dynamic power saving: If sleep is High, the memory/fifo
+      .wr_clk(rf_clk),               // 1-bit input: Write clock: Used for write operation. wr_clk must be a
+      .wr_en(1)                  // 1-bit input: Write Enable: If the FIFO is not full, asserting this
+   );
+
+   mv_avg_dual_ch #(.DATA_WIDTH0(8), .DATA_WIDTH1(2), .LOG2_AVG_LEN(5)) agc_mv_avg_dual_ch_inst (
+      .clk(bb_clk),
+      .rstn(bb_rstn),
+
+      .data_in0({1'b0, gpio_status_tmp[(GPIO_STATUS_WIDTH-2):0]}),
+      .data_in1({1'b0, ~gpio_status_tmp[GPIO_STATUS_WIDTH-1]}),
+      .data_in_valid(bb_iq_valid),
+
+      .data_out0(agc_gain_mv_avg),
+      .data_out1(agc_lock_mv_avg),
+      .data_out_valid()
+   );
+
+   // mv_avg #(.DATA_WIDTH(8), .LOG2_AVG_LEN(5)) agc_gain_mv_avg32_inst (
+   //    .clk(bb_clk),
+   //    .rstn(bb_rstn),
+
+   //    .data_in({1'b0, gpio_status_tmp[(GPIO_STATUS_WIDTH-2):0]}),
+   //    .data_in_valid(bb_iq_valid),
+   //    .data_out(agc_gain_mv_avg),
+   //    .data_out_valid()
+   // );
+   // mv_avg #(.DATA_WIDTH(2), .LOG2_AVG_LEN(5)) agc_lock_avg32_inst (
+   //    .clk(bb_clk),
+   //    .rstn(bb_rstn),
+
+   //    .data_in({1'b0, ~gpio_status_tmp[GPIO_STATUS_WIDTH-1]}),
+   //    .data_in_valid(bb_iq_valid),
+   //    .data_out(agc_lock_mv_avg),
+   //    .data_out_valid()
+   // );
+
+	endmodule
+
+=======================================================================================================================
+
+
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+
+module mv_avg
+#(
+    parameter DATA_WIDTH = 16,
+    parameter LOG2_AVG_LEN = 5
+)
+(
+    input clk,
+    input rstn,
+
+    input signed [DATA_WIDTH-1:0] data_in,
+    input data_in_valid,
+
+    output reg signed [DATA_WIDTH-1:0] data_out,
+    output reg data_out_valid
+);
+
+localparam FIFO_SIZE = 1<<LOG2_AVG_LEN;
+localparam TOTAL_WIDTH = DATA_WIDTH + LOG2_AVG_LEN;
+
+reg signed [(TOTAL_WIDTH-1):0] running_total;
+
+wire signed [DATA_WIDTH-1:0] data_in_old;
+
+wire signed [TOTAL_WIDTH-1:0] ext_data_in_old = {{LOG2_AVG_LEN{data_in_old[DATA_WIDTH-1]}}, data_in_old};
+wire signed [TOTAL_WIDTH-1:0] ext_data_in     = {{LOG2_AVG_LEN{data_in[DATA_WIDTH-1]}},     data_in    };
+
+reg data_in_valid_reg;
+reg rd_en, rd_en_start;
+wire [LOG2_AVG_LEN:0] wr_data_count;
+
+xpm_fifo_sync #(
+    .DOUT_RESET_VALUE("0"),    // String
+    .ECC_MODE("no_ecc"),       // String
+    .FIFO_MEMORY_TYPE("auto"), // String
+    .FIFO_READ_LATENCY(0),     // DECIMAL
+    .FIFO_WRITE_DEPTH(FIFO_SIZE),   // DECIMAL
+    .FULL_RESET_VALUE(0),      // DECIMAL
+    .PROG_EMPTY_THRESH(10),    // DECIMAL
+    .PROG_FULL_THRESH(10),     // DECIMAL
+    .RD_DATA_COUNT_WIDTH(LOG2_AVG_LEN+1),   // DECIMAL
+    .READ_DATA_WIDTH(DATA_WIDTH),      // DECIMAL
+    .READ_MODE("fwft"),         // String
+    .USE_ADV_FEATURES("0404"), // only enable rd_data_count and wr_data_count
+    .WAKEUP_TIME(0),           // DECIMAL
+    .WRITE_DATA_WIDTH(DATA_WIDTH),     // DECIMAL
+    .WR_DATA_COUNT_WIDTH(LOG2_AVG_LEN+1)    // DECIMAL
+  ) fifo_1clk_for_mv_avg_i (
+    .almost_empty(),
+    .almost_full(),
+    .data_valid(),
+    .dbiterr(),
+    .dout(data_in_old),
+    .empty(empty),
+    .full(full),
+    .overflow(),
+    .prog_empty(),
+    .prog_full(),
+    .rd_data_count(),
+    .rd_rst_busy(),
+    .sbiterr(),
+    .underflow(),
+    .wr_ack(),
+    .wr_data_count(wr_data_count),
+    .wr_rst_busy(),
+    .din(data_in),
+    .injectdbiterr(),
+    .injectsbiterr(),
+    .rd_en(rd_en),
+    .rst(~rstn),
+    .sleep(),
+    .wr_clk(clk),
+    .wr_en(data_in_valid)
+  );
+
+always @(posedge clk) begin
+    if (~rstn) begin
+        data_in_valid_reg <= 0;
+        running_total <= 0;
+        data_out <= 0;
+        data_out_valid <= 0;
+        rd_en <= 0;
+        rd_en_start <= 0;
+    end else begin
+        data_in_valid_reg <= data_in_valid;
+        data_out_valid <= data_in_valid_reg;
+        rd_en_start <= ((wr_data_count == FIFO_SIZE)?1:rd_en_start);
+        rd_en <= (rd_en_start?data_in_valid:rd_en);
+        data_out <= running_total[TOTAL_WIDTH-1:LOG2_AVG_LEN];
+        if (data_in_valid) begin
+            running_total <= running_total + ext_data_in - (rd_en_start?ext_data_in_old:0);
+        end
+    end
+end
+
+endmodule
+
+
+=======================================================================================================================
+
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+
+module mv_avg_dual_ch
+#(
+    parameter DATA_WIDTH0 = 16,
+    parameter DATA_WIDTH1 = 16,
+    parameter LOG2_AVG_LEN = 5
+)
+(
+    input clk,
+    input rstn,
+
+    input signed [DATA_WIDTH0-1:0] data_in0,
+    input signed [DATA_WIDTH1-1:0] data_in1,
+    input data_in_valid,
+
+    output signed [DATA_WIDTH0-1:0] data_out0,
+    output signed [DATA_WIDTH1-1:0] data_out1,
+    output data_out_valid
+);
+
+localparam FIFO_SIZE = 1<<LOG2_AVG_LEN;
+localparam TOTAL_WIDTH0 = DATA_WIDTH0 + LOG2_AVG_LEN;
+localparam TOTAL_WIDTH1 = DATA_WIDTH1 + LOG2_AVG_LEN;
+
+reg signed [(TOTAL_WIDTH0-1):0] running_total0;
+reg signed [(TOTAL_WIDTH1-1):0] running_total1;
+
+reg  signed [DATA_WIDTH0-1:0] data_in0_reg; // to lock data_in by data_in_valid in case it changes in between two valid strobes
+reg  signed [DATA_WIDTH0-1:0] data_in1_reg; // to lock data_in by data_in_valid in case it changes in between two valid strobes
+wire signed [DATA_WIDTH0-1:0] data_in_old0;
+wire signed [DATA_WIDTH1-1:0] data_in_old1;
+
+wire signed [TOTAL_WIDTH0-1:0] ext_data_in_old0 = {{LOG2_AVG_LEN{data_in_old0[DATA_WIDTH0-1]}}, data_in_old0};
+wire signed [TOTAL_WIDTH0-1:0] ext_data_in0     = {{LOG2_AVG_LEN{data_in0_reg[DATA_WIDTH0-1]}}, data_in0_reg};
+wire signed [TOTAL_WIDTH1-1:0] ext_data_in_old1 = {{LOG2_AVG_LEN{data_in_old1[DATA_WIDTH1-1]}}, data_in_old1};
+wire signed [TOTAL_WIDTH1-1:0] ext_data_in1     = {{LOG2_AVG_LEN{data_in1_reg[DATA_WIDTH1-1]}}, data_in1_reg};
+
+reg rd_en, rd_en_start;
+wire [LOG2_AVG_LEN:0] wr_data_count;
+reg [LOG2_AVG_LEN:0]  wr_data_count_reg;
+wire wr_complete_pulse;
+reg  wr_complete_pulse_reg;
+
+assign wr_complete_pulse = (wr_data_count > wr_data_count_reg);
+assign data_out_valid = wr_complete_pulse_reg;
+assign data_out0 = running_total0[TOTAL_WIDTH0-1:LOG2_AVG_LEN];
+assign data_out1 = running_total1[TOTAL_WIDTH1-1:LOG2_AVG_LEN];
+
+xpm_fifo_sync #(
+    .DOUT_RESET_VALUE("0"),    // String
+    .ECC_MODE("no_ecc"),       // String
+    .FIFO_MEMORY_TYPE("auto"), // String
+    .FIFO_READ_LATENCY(0),     // DECIMAL
+    .FIFO_WRITE_DEPTH(FIFO_SIZE),   // DECIMAL minimum 16!
+    .FULL_RESET_VALUE(0),      // DECIMAL
+    .PROG_EMPTY_THRESH(10),    // DECIMAL
+    .PROG_FULL_THRESH(10),     // DECIMAL
+    .RD_DATA_COUNT_WIDTH(LOG2_AVG_LEN+1),   // DECIMAL
+    .READ_DATA_WIDTH(DATA_WIDTH0+DATA_WIDTH1),      // DECIMAL
+    .READ_MODE("fwft"),         // String
+    .USE_ADV_FEATURES("0404"), // only enable rd_data_count and wr_data_count
+    .WAKEUP_TIME(0),           // DECIMAL
+    .WRITE_DATA_WIDTH(DATA_WIDTH0+DATA_WIDTH1),     // DECIMAL
+    .WR_DATA_COUNT_WIDTH(LOG2_AVG_LEN+1)    // DECIMAL
+) fifo_1clk_for_mv_avg_dual_ch_i (
+    .almost_empty(),
+    .almost_full(),
+    .data_valid(),
+    .dbiterr(),
+    .dout({data_in_old1, data_in_old0}),
+    .empty(empty),
+    .full(full),
+    .overflow(),
+    .prog_empty(),
+    .prog_full(),
+    .rd_data_count(),
+    .rd_rst_busy(),
+    .sbiterr(),
+    .underflow(),
+    .wr_ack(),
+    .wr_data_count(wr_data_count),
+    .wr_rst_busy(),
+    .din({data_in1, data_in0}),
+    .injectdbiterr(),
+    .injectsbiterr(),
+    .rd_en(rd_en),
+    .rst(~rstn),
+    .sleep(),
+    .wr_clk(clk),
+    .wr_en(data_in_valid)
+  );
+
+always @(posedge clk) begin
+    if (~rstn) begin
+        data_in0_reg <= 0;
+        data_in1_reg <= 0;
+        wr_complete_pulse_reg <= 0;
+        wr_data_count_reg <= 0;
+        running_total0 <= 0;
+        running_total1 <= 0;
+        rd_en <= 0;
+        rd_en_start <= 0;
+    end else begin
+        data_in0_reg <= (data_in_valid?data_in0:data_in0_reg);
+        data_in1_reg <= (data_in_valid?data_in1:data_in1_reg);
+        wr_complete_pulse_reg <= wr_complete_pulse;
+        wr_data_count_reg <= wr_data_count;
+        rd_en_start <= ((wr_data_count == (FIFO_SIZE))?1:rd_en_start);
+        rd_en <= (rd_en_start?wr_complete_pulse:rd_en);
+        if (wr_complete_pulse) begin
+            running_total0 <= running_total0 + ext_data_in0 - (rd_en_start?ext_data_in_old0:0);
+            running_total1 <= running_total1 + ext_data_in1 - (rd_en_start?ext_data_in_old1:0);
+        end
+    end
+end
+
+endmodule
+
+
+=======================================================================================================================
+
+
+
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+
+`include "rx_intf_pre_def.v"
+
+`timescale 1 ns / 1 ps
+
+	module rx_intf #
+	(
+    parameter integer GPIO_STATUS_WIDTH = 8,
+    parameter integer RSSI_HALF_DB_WIDTH = 11,
+
+		parameter integer ADC_PACK_DATA_WIDTH	= 64,
+		parameter integer IQ_DATA_WIDTH	=     16,
+		parameter integer RSSI_DATA_WIDTH	=     10,
+		
+		parameter integer C_S00_AXI_DATA_WIDTH	= 32,
+		parameter integer C_S00_AXI_ADDR_WIDTH	= 7,
+
+		parameter integer C_S00_AXIS_TDATA_WIDTH	= 64,
+		parameter integer C_M00_AXIS_TDATA_WIDTH	= 64,
+		
+    parameter integer WAIT_COUNT_BITS = 5,
+		parameter integer MAX_NUM_DMA_SYMBOL = 8192,
+    parameter integer TSF_TIMER_WIDTH = 64 // according to 802.11 standard
+	)
+	(
+    // -------------debug purpose----------------
+    output wire trigger_out0,
+    output wire trigger_out1,
+    output wire trigger_out2,
+    output wire trigger_out3,
+    output wire trigger_out4,
+    output wire trigger_out5,
+    output wire trigger_out6,
+    output wire trigger_out7,
+    // -------------debug purpose----------------
+
+    // ad9361 status and ctrl
+    input  wire [(GPIO_STATUS_WIDTH-1):0] gpio_status_rf,
+    output wire [(GPIO_STATUS_WIDTH-1):0] gpio_status_bb,
+
+    // from ad9361_adc_pack
+    input wire adc_clk,
+    input wire adc_rst,
+    input wire [(ADC_PACK_DATA_WIDTH-1) : 0] adc_data,
+    //(* mark_debug = "true" *) input wire adc_sync,
+    input wire adc_valid,
+
+    // I/Q ports from tx_intf for loop back
+    input wire [(2*IQ_DATA_WIDTH-1) : 0] iq0_from_tx_intf,
+    input wire [(2*IQ_DATA_WIDTH-1) : 0] iq1_from_tx_intf,
+    input wire iq_valid_from_tx_intf,
+
+    // Ports to openofdm rx
+    output wire [(2*IQ_DATA_WIDTH-1) : 0] sample0,
+    output wire [(2*IQ_DATA_WIDTH-1) : 0] sample1,
+    output wire sample_strobe,
+    input  wire pkt_header_valid,
+    input  wire pkt_header_valid_strobe,
+    input  wire ht_unsupport,
+    input  wire [7:0] pkt_rate,
+		input  wire [15:0] pkt_len,
+		input  wire ht_aggr,
+		input  wire ht_aggr_last,
+		input  wire ht_sgi,
+		input  wire byte_in_strobe,
+		input  wire [7:0] byte_in,
+		input  wire [15:0] byte_count,
+    input  wire fcs_in_strobe,
+		input  wire fcs_ok,
+
+    // led
+    output wire fcs_ok_led,
+
+  // interrupt to PS
+    output wire rx_pkt_intr,
+    
+    // interrupt from xilixn axi dma
+    input wire s2mm_intr,
+    
+    // for xpu
+    input  wire mute_adc_out_to_bb, // in acc clock domain
+    input  wire block_rx_dma_to_ps, // if addr filter is on in xpu
+    input  wire block_rx_dma_to_ps_valid, // if addr filter is on in xpu
+    input wire [(RSSI_HALF_DB_WIDTH-1):0] rssi_half_db_lock_by_sig_valid,
+    input wire [(GPIO_STATUS_WIDTH-1):0] gpio_status_lock_by_sig_valid,
+    input wire [(TSF_TIMER_WIDTH-1):0]  tsf_runtime_val,
+    input wire tsf_pulse_1M,
+
+		// Ports of Axi Slave Bus Interface S00_AXI
+		input wire  s00_axi_aclk,
+		input wire  s00_axi_aresetn,
+		input wire [C_S00_AXI_ADDR_WIDTH-1 : 0] s00_axi_awaddr,
+		input wire [2 : 0] s00_axi_awprot,
+		input wire  s00_axi_awvalid,
+		output wire  s00_axi_awready,
+		input wire [C_S00_AXI_DATA_WIDTH-1 : 0] s00_axi_wdata,
+		input wire [(C_S00_AXI_DATA_WIDTH/8)-1 : 0] s00_axi_wstrb,
+		input wire  s00_axi_wvalid,
+		output wire  s00_axi_wready,
+		output wire [1 : 0] s00_axi_bresp,
+		output wire  s00_axi_bvalid,
+		input wire  s00_axi_bready,
+		input wire [C_S00_AXI_ADDR_WIDTH-1 : 0] s00_axi_araddr,
+		input wire [2 : 0] s00_axi_arprot,
+		input wire  s00_axi_arvalid,
+		output wire  s00_axi_arready,
+		output wire [C_S00_AXI_DATA_WIDTH-1 : 0] s00_axi_rdata,
+		output wire [1 : 0] s00_axi_rresp,
+		output wire  s00_axi_rvalid,
+		input wire  s00_axi_rready,
+
+		// Ports of Axi Master Bus Interface M00_AXIS to PS
+		input wire  m00_axis_aclk,
+		input wire  m00_axis_aresetn,
+		output wire  m00_axis_tvalid,
+		output wire [C_M00_AXIS_TDATA_WIDTH-1 : 0] m00_axis_tdata,
+		output wire [(C_M00_AXIS_TDATA_WIDTH/8)-1 : 0] m00_axis_tstrb,
+		output wire  m00_axis_tlast,
+		input wire  m00_axis_tready
+	);
+
+	  function integer clogb2 (input integer bit_depth);                                   
+      begin                                                                              
+        for(clogb2=0; bit_depth>0; clogb2=clogb2+1)                                      
+          bit_depth = bit_depth >> 1;                                                    
+      end                                                                                
+    endfunction   
+    
+    localparam integer MAX_BIT_NUM_DMA_SYMBOL  = clogb2(MAX_NUM_DMA_SYMBOL);
+    
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg0; 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg1; // 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg2; 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg3; // 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg4; // 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg5; // 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg6; // 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg7; // 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg8; 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg9; // 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg10; 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg11; // 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg12; // 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg13; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg14; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg15; // 
+    wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg16; 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg17; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg18; 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg19; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg20; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg21; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg22; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg23; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg24; 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg25; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg26; 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg27; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg28; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg29; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg30; // 
+    // wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg31; // 
+
+    //for direct loop back
+    wire  m00_axis_tvalid_inner;
+    wire [C_M00_AXIS_TDATA_WIDTH-1 : 0] m00_axis_tdata_inner;
+    wire [(C_M00_AXIS_TDATA_WIDTH/8)-1 : 0] m00_axis_tstrb_inner;
+    wire  m00_axis_tlast_inner;
+    wire  m00_axis_tlast_auto_recover;
+
+    wire emptyn_to_bb;
+    wire [(ADC_PACK_DATA_WIDTH-1) : 0] ant_data_after_sel;
+
+    wire [(IQ_DATA_WIDTH-1) : 0] rf_i0_to_acc;
+	  wire [(IQ_DATA_WIDTH-1) : 0] rf_q0_to_acc;
+    wire [(IQ_DATA_WIDTH-1) : 0] rf_i1_to_acc;
+	  wire [(IQ_DATA_WIDTH-1) : 0] rf_q1_to_acc;
+ 
+	  wire [(IQ_DATA_WIDTH-1):0] bw20_i0;
+    wire [(IQ_DATA_WIDTH-1):0] bw20_q0;
+	  wire [(IQ_DATA_WIDTH-1):0] bw20_i1;
+    wire [(IQ_DATA_WIDTH-1):0] bw20_q1;
+    wire bw20_iq_valid;
+        
+    wire [(4*IQ_DATA_WIDTH-1) : 0] rf_iq_loopback;
+    
+	  wire start_1trans_from_acc_to_m_axis;
+    wire [(C_M00_AXIS_TDATA_WIDTH-1):0] data_from_acc_to_m_axis;
+    wire data_ready_from_acc_to_m_axis;
+    wire fulln_from_m_axis_to_acc;
+    wire [MAX_BIT_NUM_DMA_SYMBOL-1 : 0] m_axis_fifo_data_count;
+    wire fcs_valid_internal;
+    wire rx_pkt_intr_internal;
+    wire intr_internal;
+    
+    wire wifi_rx_iq_fifo_emptyn;
+    
+    //wire [(MAX_BIT_NUM_DMA_SYMBOL-1) : 0] monitor_num_dma_symbol_to_pl;
+    wire [(MAX_BIT_NUM_DMA_SYMBOL-1) : 0] monitor_num_dma_symbol_to_ps;
+    wire [(MAX_BIT_NUM_DMA_SYMBOL-1) : 0] num_dma_symbol_to_ps;
+
+    //wire fcs_invalid_from_acc_delay;
+    wire m_axis_auto_rst;
+    wire m_axis_rst;
+    wire enable_m_axis_auto_rst;
+    
+    wire ant_flag_in_rf_domain;
+    wire mute_adc_out_to_bb_in_rf_domain;
+    wire [(ADC_PACK_DATA_WIDTH-1) : 0] adc_data_internal;
+    wire [(ADC_PACK_DATA_WIDTH-1) : 0] adc_data_after_sel;
+
+    wire [(C_M00_AXIS_TDATA_WIDTH-1) : 0] data_from_acc;
+	  wire data_ready_from_acc;
+
+    wire fcs_valid;
+    wire fcs_invalid;
+    wire sig_valid;
+    wire sig_invalid;
+
+    wire rx_pkt_sn_plus_one;
+
+    // -------------debug purpose----------------
+    assign trigger_out0 = slv_reg1[0];
+    assign trigger_out1 = slv_reg1[1];
+    assign trigger_out2 = slv_reg1[2];
+    assign trigger_out3 = slv_reg1[3];
+    assign trigger_out4 = slv_reg1[4];
+    assign trigger_out5 = slv_reg1[5];
+    assign trigger_out6 = slv_reg1[6];
+    assign trigger_out7 = slv_reg1[7];
+    // -------------debug purpose----------------
+
+    assign sample0 = {rf_i0_to_acc,rf_q0_to_acc};
+    assign sample1 = {rf_i1_to_acc,rf_q1_to_acc};
+    assign fcs_valid = (fcs_in_strobe&fcs_ok);
+    assign fcs_invalid = (fcs_in_strobe&(~fcs_ok));
+    assign sig_valid = (pkt_header_valid_strobe&pkt_header_valid);
+    assign sig_invalid = (pkt_header_valid_strobe&(~pkt_header_valid));
+
+    assign m00_axis_tvalid = m00_axis_tvalid_inner;
+    assign m00_axis_tdata  = m00_axis_tdata_inner;
+    assign m00_axis_tstrb  = m00_axis_tstrb_inner;
+    assign m00_axis_tlast  = (m00_axis_tlast_inner|m00_axis_tlast_auto_recover);
+
+    assign fcs_valid_internal = (slv_reg5[3]==0?fcs_valid:fcs_in_strobe);
+    assign rx_pkt_intr = (slv_reg2[8]==0?intr_internal:slv_reg2[0]);
+    
+    assign intr_internal = (slv_reg2[12]==0?rx_pkt_intr_internal:fcs_valid_internal);
+
+    assign num_dma_symbol_to_ps = (slv_reg5[5]==1)?(monitor_num_dma_symbol_to_ps-1):(slv_reg9[(MAX_BIT_NUM_DMA_SYMBOL-1):0]-1);
+
+    assign enable_m_axis_auto_rst = slv_reg5[16];
+    assign m_axis_auto_rst = (m_axis_rst&enable_m_axis_auto_rst);
+  
+    assign adc_data_after_sel = (ant_flag_in_rf_domain?{adc_data[(2*IQ_DATA_WIDTH-1) : 0],adc_data[(ADC_PACK_DATA_WIDTH-1) : (2*IQ_DATA_WIDTH)]}:adc_data);
+    assign adc_data_internal  = (mute_adc_out_to_bb_in_rf_domain?{adc_data_after_sel[(ADC_PACK_DATA_WIDTH-1) : (2*IQ_DATA_WIDTH)],32'd0}:adc_data_after_sel);
+
+    assign bw20_i0 = (slv_reg3[8]?iq0_from_tx_intf[  (IQ_DATA_WIDTH-1) :             0]:ant_data_after_sel[  (IQ_DATA_WIDTH-1) : 0]);
+    assign bw20_q0 = (slv_reg3[8]?iq0_from_tx_intf[(2*IQ_DATA_WIDTH-1) : IQ_DATA_WIDTH]:ant_data_after_sel[(2*IQ_DATA_WIDTH-1) : IQ_DATA_WIDTH]);
+    assign bw20_i1 = (slv_reg3[8]?iq1_from_tx_intf[  (IQ_DATA_WIDTH-1) :             0]:ant_data_after_sel[(3*IQ_DATA_WIDTH-1) : (2*IQ_DATA_WIDTH)]);
+    assign bw20_q1 = (slv_reg3[8]?iq1_from_tx_intf[(2*IQ_DATA_WIDTH-1) : IQ_DATA_WIDTH]:ant_data_after_sel[(4*IQ_DATA_WIDTH-1) : (3*IQ_DATA_WIDTH)]);
+    assign bw20_iq_valid = (slv_reg3[8]?iq_valid_from_tx_intf:emptyn_to_bb);
+    
+// ---------------------------fro mute_adc_out_to_bb control from acc domain to adc domain-------------------------------------
+    xpm_cdc_array_single #(
+      //Common module parameters
+      .DEST_SYNC_FF   (4), // integer; range: 2-10
+      .INIT_SYNC_FF   (0), // integer; 0=disable simulation init values, 1=enable simulation init values
+      .SIM_ASSERT_CHK (0), // integer; 0=disable simulation messages, 1=enable simulation messages
+      .SRC_INPUT_REG  (1), // integer; 0=do not register input, 1=register input
+      .WIDTH          (1)  // integer; range: 1-1024
+    ) xpm_cdc_array_single_inst_mute_adc (
+      .src_clk  (s00_axi_aclk),  // optional; required when SRC_INPUT_REG = 1
+      .src_in   (mute_adc_out_to_bb),
+      .dest_clk (adc_clk),
+      .dest_out (mute_adc_out_to_bb_in_rf_domain)
+    );
+
+// ---------------------------fro antenna selection from acc domain to adc domain-------------------------------------
+    xpm_cdc_array_single #(
+      //Common module parameters
+      .DEST_SYNC_FF   (4), // integer; range: 2-10
+      .INIT_SYNC_FF   (0), // integer; 0=disable simulation init values, 1=enable simulation init values
+      .SIM_ASSERT_CHK (0), // integer; 0=disable simulation messages, 1=enable simulation messages
+      .SRC_INPUT_REG  (1), // integer; 0=do not register input, 1=register input
+      .WIDTH          (1)  // integer; range: 1-1024
+    ) xpm_cdc_array_single_inst_ant_flag (
+      .src_clk  (s00_axi_aclk),  // optional; required when SRC_INPUT_REG = 1
+      .src_in   (slv_reg16[0]),
+      .dest_clk (adc_clk),
+      .dest_out (ant_flag_in_rf_domain)
+    );
+
+`ifndef RX_INTF_DISCONNECT_LED
+    edge_to_flip edge_to_flip_fcs_ok_i (
+        .clk(m00_axis_aclk),
+        .rstn(m00_axis_aresetn),
+        .data_in(fcs_ok),
+        .flip_output(fcs_ok_led)
+	);
+`endif
+
+    gpio_status_rf_to_bb # (
+        .GPIO_STATUS_WIDTH(GPIO_STATUS_WIDTH)        
+    ) gpio_status_rf_to_bb_i (
+        .rf_rst(adc_rst),
+        .rf_clk(adc_clk),
+        .gpio_status_rf(gpio_status_rf),
+
+        .bb_rstn(m00_axis_aresetn),
+        .bb_clk(m00_axis_aclk),
+        .bb_iq_valid(bw20_iq_valid),
+        .gpio_status_bb(gpio_status_bb)
+    );
+
+    adc_intf # (
+        .IQ_DATA_WIDTH(IQ_DATA_WIDTH)        
+    ) adc_intf_i (
+        .adc_rst(adc_rst),
+        .adc_clk(adc_clk),
+        .adc_data(adc_data_internal),
+        //.adc_sync(adc_sync),
+        .adc_valid(adc_valid),
+        .acc_clk(m00_axis_aclk),
+        .acc_rstn(m00_axis_aresetn&(~slv_reg0[5])),
+
+        .bb_gain(slv_reg11[2:0]), // number of bit shift to left
+        .data_to_bb(ant_data_after_sel),
+        .emptyn_to_bb(emptyn_to_bb),
+        .bb_ask_data(1'b1&(~slv_reg10[1]))
+    );
+
+// Instantiation of Axi Bus Interface S00_AXI
+	rx_intf_s_axi # ( 
+		.C_S_AXI_DATA_WIDTH(C_S00_AXI_DATA_WIDTH),
+		.C_S_AXI_ADDR_WIDTH(C_S00_AXI_ADDR_WIDTH)
+	) rx_intf_s_axi_i (
+		.S_AXI_ACLK(s00_axi_aclk),
+		.S_AXI_ARESETN(s00_axi_aresetn),
+		.S_AXI_AWADDR(s00_axi_awaddr),
+		.S_AXI_AWPROT(s00_axi_awprot),
+		.S_AXI_AWVALID(s00_axi_awvalid),
+		.S_AXI_AWREADY(s00_axi_awready),
+		.S_AXI_WDATA(s00_axi_wdata),
+		.S_AXI_WSTRB(s00_axi_wstrb),
+		.S_AXI_WVALID(s00_axi_wvalid),
+		.S_AXI_WREADY(s00_axi_wready),
+		.S_AXI_BRESP(s00_axi_bresp),
+		.S_AXI_BVALID(s00_axi_bvalid),
+		.S_AXI_BREADY(s00_axi_bready),
+		.S_AXI_ARADDR(s00_axi_araddr),
+		.S_AXI_ARPROT(s00_axi_arprot),
+		.S_AXI_ARVALID(s00_axi_arvalid),
+		.S_AXI_ARREADY(s00_axi_arready),
+		.S_AXI_RDATA(s00_axi_rdata),
+		.S_AXI_RRESP(s00_axi_rresp),
+		.S_AXI_RVALID(s00_axi_rvalid),
+		.S_AXI_RREADY(s00_axi_rready),
+
+		.SLV_REG0(slv_reg0),
+		.SLV_REG1(slv_reg1),
+		.SLV_REG2(slv_reg2),
+		.SLV_REG3(slv_reg3),
+		.SLV_REG4(slv_reg4),
+    .SLV_REG5(slv_reg5),
+    .SLV_REG6(slv_reg6),
+    .SLV_REG7(slv_reg7),
+		.SLV_REG8(slv_reg8),
+    .SLV_REG9(slv_reg9),
+    .SLV_REG10(slv_reg10),
+    .SLV_REG11(slv_reg11),
+    .SLV_REG12(slv_reg12),
+    .SLV_REG13(slv_reg13),
+    //.SLV_REG14(slv_reg14),
+    //.SLV_REG15(slv_reg15),
+		.SLV_REG16(slv_reg16)/*,
+    .SLV_REG17(slv_reg17),
+    .SLV_REG18(slv_reg18),
+    .SLV_REG19(slv_reg19),
+    .SLV_REG20(slv_reg20),
+    .SLV_REG21(slv_reg21),
+    .SLV_REG22(slv_reg22),
+    .SLV_REG23(slv_reg23),
+		.SLV_REG24(slv_reg24),
+    .SLV_REG25(slv_reg25),
+    .SLV_REG26(slv_reg26),
+    .SLV_REG27(slv_reg27),
+    .SLV_REG28(slv_reg28),
+    .SLV_REG29(slv_reg29),
+    .SLV_REG30(slv_reg30),
+    .SLV_REG31(slv_reg31)*/
+	);
+
+    rx_iq_intf # (
+        .C_S00_AXIS_TDATA_WIDTH(C_S00_AXIS_TDATA_WIDTH),
+        .IQ_DATA_WIDTH(IQ_DATA_WIDTH)
+    ) rx_iq_intf_i (
+        .rstn(m00_axis_aresetn&(~slv_reg0[3])),
+        .clk(m00_axis_aclk),
+        .bw20_i0(bw20_i0),
+        .bw20_q0(bw20_q0),
+        .bw20_i1(bw20_i1),
+        .bw20_q1(bw20_q1),
+        .bw20_iq_valid(bw20_iq_valid),
+        .fifo_in_en(~slv_reg4[1]),
+        .fifo_out_en(~slv_reg4[2]),
+        .bb_20M_en(slv_reg4[3]),
+        .rf_i0(rf_i0_to_acc),
+        .rf_q0(rf_q0_to_acc),
+        .rf_i1(rf_i1_to_acc),
+        .rf_q1(rf_q1_to_acc),
+        .rf_iq_valid(sample_strobe),
+        .rf_iq_valid_delay_sel(slv_reg3[4]),
+        .rf_iq(rf_iq_loopback),
+        .wifi_rx_iq_fifo_emptyn(wifi_rx_iq_fifo_emptyn)
+    );
+
+    byte_to_word_fcs_sn_insert byte_to_word_fcs_sn_insert_inst (
+        .clk(m00_axis_aclk),
+        .rstn(m00_axis_aresetn&(~slv_reg0[7])&(~pkt_header_valid_strobe)),
+        .rstn_sn(m00_axis_aresetn&(~slv_reg0[7])),
+
+        .byte_in(byte_in),
+        .byte_in_strobe(byte_in_strobe),
+        .byte_count(byte_count),
+        .num_byte(pkt_len),
+        .fcs_in_strobe(fcs_in_strobe),
+        .fcs_ok(fcs_ok),
+        .rx_pkt_sn_plus_one(rx_pkt_sn_plus_one),
+
+        .word_out(data_from_acc),
+        .word_out_strobe(data_ready_from_acc)
+    );
+
+    rx_intf_pl_to_m_axis # ( 
+        .GPIO_STATUS_WIDTH(GPIO_STATUS_WIDTH),
+        .RSSI_HALF_DB_WIDTH(RSSI_HALF_DB_WIDTH),
+        .IQ_DATA_WIDTH(IQ_DATA_WIDTH),
+        .TSF_TIMER_WIDTH(TSF_TIMER_WIDTH),
+        .C_M00_AXIS_TDATA_WIDTH(C_M00_AXIS_TDATA_WIDTH),
+        .MAX_BIT_NUM_DMA_SYMBOL(MAX_BIT_NUM_DMA_SYMBOL)
+    ) rx_intf_pl_to_m_axis_i (
+        .clk(m00_axis_aclk),
+        .rstn(m00_axis_aresetn&(~slv_reg0[8])),
+
+        // port to xpu
+        .block_rx_dma_to_ps(block_rx_dma_to_ps),
+        .block_rx_dma_to_ps_valid(block_rx_dma_to_ps_valid),
+        .rssi_half_db_lock_by_sig_valid(rssi_half_db_lock_by_sig_valid),
+        .gpio_status_lock_by_sig_valid(gpio_status_lock_by_sig_valid),
+	    
+        // to m_axis and PS
+        .start_1trans_to_m_axis(start_1trans_from_acc_to_m_axis),
+        .data_to_m_axis_out(data_from_acc_to_m_axis),
+        .data_ready_to_m_axis_out(data_ready_from_acc_to_m_axis),
+	      .monitor_num_dma_symbol_to_ps(monitor_num_dma_symbol_to_ps),
+        .m_axis_rst(m_axis_rst),
+        .m_axis_tlast(m00_axis_tlast_inner),
+        .m_axis_tlast_auto_recover(m00_axis_tlast_auto_recover),
+
+        // port to xilinx axi dma
+        .s2mm_intr(s2mm_intr),
+        .rx_pkt_intr(rx_pkt_intr_internal),
+
+        // to byte_to_word_fcs_sn_intert
+        .rx_pkt_sn_plus_one(rx_pkt_sn_plus_one),
+
+        .m_axis_tlast_auto_recover_enable(~slv_reg12[31]),
+        .m_axis_tlast_auto_recover_timeout_top(slv_reg12[12:0]),
+        .start_1trans_mode(slv_reg5[2:0]),
+        .start_1trans_ext_trigger(slv_reg6[0]),
+        .src_sel(slv_reg7[0]),
+        .tsf_runtime_val(tsf_runtime_val),
+        .count_top(slv_reg13[14:0]),
+//        .pad_test(slv_reg13[31]),
+        
+        .max_signal_len_th(slv_reg6[31:16]),
+
+        .data_from_acc(data_from_acc),
+        .data_ready_from_acc(data_ready_from_acc),
+        .pkt_rate(pkt_rate),
+	      .pkt_len(pkt_len),
+        .sig_valid(sig_valid),
+        .ht_aggr(ht_aggr),
+        .ht_aggr_last(ht_aggr_last),
+	      .ht_sgi(ht_sgi),
+        .ht_unsupport(ht_unsupport),
+        .fcs_valid(fcs_valid),
+        
+        .rf_iq(rf_iq_loopback),
+        .rf_iq_valid(sample_strobe),
+
+        .tsf_pulse_1M(tsf_pulse_1M)
+    );
+    
+	rx_intf_m_axis # (
+		.C_M_AXIS_TDATA_WIDTH(C_M00_AXIS_TDATA_WIDTH),
+		.WAIT_COUNT_BITS(WAIT_COUNT_BITS),
+		.MAX_NUM_DMA_SYMBOL(MAX_NUM_DMA_SYMBOL),
+		.MAX_BIT_NUM_DMA_SYMBOL(MAX_BIT_NUM_DMA_SYMBOL)
+	) rx_intf_m_axis_i (
+		.M_AXIS_ACLK(m00_axis_aclk),
+		.M_AXIS_ARESETN( m00_axis_aresetn&(~slv_reg0[4])&(~m_axis_auto_rst) ),
+		.M_AXIS_TVALID(m00_axis_tvalid_inner),
+		.M_AXIS_TDATA(m00_axis_tdata_inner),
+		.M_AXIS_TSTRB(m00_axis_tstrb_inner),
+		.M_AXIS_TLAST(m00_axis_tlast_inner),
+		.M_AXIS_TREADY(m00_axis_tready),
+		.START_COUNT_CFG(0),
+		.M_AXIS_NUM_DMA_SYMBOL(num_dma_symbol_to_ps),
+		.start_1trans(start_1trans_from_acc_to_m_axis),
+		
+    .endless_mode(slv_reg5[9]),
+    .DATA_FROM_ACC(data_from_acc_to_m_axis),
+    .ACC_DATA_READY(data_ready_from_acc_to_m_axis),
+    .data_count(m_axis_fifo_data_count),
+    .FULLN_TO_ACC(fulln_from_m_axis_to_acc)
+	);
+
+	endmodule
+
+
+=======================================================================================================================
+
+// based on Xilinx module template
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+
+`timescale 1 ns / 1 ps
+
+	module rx_intf_m_axis #
+	(
+		parameter integer WAIT_COUNT_BITS = 5,
+		parameter integer MAX_NUM_DMA_SYMBOL = 8192,
+		parameter integer MAX_BIT_NUM_DMA_SYMBOL = 14,
+
+		parameter integer C_M_AXIS_TDATA_WIDTH	= 64
+	)
+	(
+		input wire endless_mode,
+		input wire [WAIT_COUNT_BITS-1 : 0] START_COUNT_CFG,
+		input wire [MAX_BIT_NUM_DMA_SYMBOL-1 : 0] M_AXIS_NUM_DMA_SYMBOL,
+
+		input wire start_1trans,
+
+        input wire [C_M_AXIS_TDATA_WIDTH-1 : 0] DATA_FROM_ACC,
+        input wire ACC_DATA_READY,
+        output wire [MAX_BIT_NUM_DMA_SYMBOL-1 : 0] data_count,
+        output wire FULLN_TO_ACC,
+        
+		input wire  M_AXIS_ACLK,
+		input wire  M_AXIS_ARESETN,
+		output wire  M_AXIS_TVALID,
+		output wire [C_M_AXIS_TDATA_WIDTH-1 : 0] M_AXIS_TDATA,
+		output wire [(C_M_AXIS_TDATA_WIDTH/8)-1 : 0] M_AXIS_TSTRB,
+		output wire  M_AXIS_TLAST,
+		input wire  M_AXIS_TREADY
+	);
+	
+	function integer clogb2 (input integer bit_depth);                                   
+	  begin                                                                              
+	    for(clogb2=0; bit_depth>0; clogb2=clogb2+1)                                      
+	      bit_depth = bit_depth >> 1;                                                    
+	  end                                                                                
+	endfunction                                                                          
+	                                                                                     
+	localparam integer bit_num  = clogb2(MAX_NUM_DMA_SYMBOL);      
+                                                                   
+	localparam [1:0] IDLE = 2'b00,        // This is the initial/idle state               
+	                INIT_COUNTER  = 2'b01, // This state initializes the counter, ones   
+	                SEND_STREAM   = 2'b10; // In this state the                          
+
+	reg [1:0] mst_exec_state;                                                            
+	reg [bit_num-1:0] read_pointer;                                                      
+	reg [WAIT_COUNT_BITS-1 : 0] 	count;
+	wire  	axis_tvalid;
+	wire  	axis_tlast;
+    reg     axis_tlast_delay;
+	wire  	tx_en;
+	reg     tx_done;
+	wire    EMPTY;
+    reg       init_txn_ff;
+    wire      init_txn_pulse;
+    wire      FULL;
+    
+    assign FULLN_TO_ACC     = (~FULL);
+	assign M_AXIS_TVALID	= axis_tvalid;
+	assign M_AXIS_TLAST	    = axis_tlast&&(!axis_tlast_delay);
+	assign M_AXIS_TSTRB	    = {(C_M_AXIS_TDATA_WIDTH/8){1'b1}};
+
+	assign axis_tvalid = ((mst_exec_state == SEND_STREAM) && (read_pointer <= M_AXIS_NUM_DMA_SYMBOL || (endless_mode==1) ) && (!EMPTY) );
+	assign axis_tlast = ( (read_pointer == M_AXIS_NUM_DMA_SYMBOL) && tx_en ) && (endless_mode==0);                                
+	assign tx_en = ( M_AXIS_TREADY && axis_tvalid );   
+
+    assign init_txn_pulse    = (!init_txn_ff) && start_1trans;
+    
+    //Generate a pulse to initiate AXI transaction.
+    always @(posedge M_AXIS_ACLK)                                              
+      begin                                                                        
+        // Initiates AXI transaction delay    
+        if (!M_AXIS_ARESETN)                                                   
+          begin                                                                    
+            init_txn_ff <= 1'b0;                                                   
+            //init_txn_ff2 <= 1'b0;                                                   
+          end                                                                               
+        else                                                                       
+          begin  
+            init_txn_ff <= start_1trans;
+          end                                                                      
+      end     
+      
+	// Control state machine implementation                             
+	always @(posedge M_AXIS_ACLK)                                             
+	begin                                                                     
+	  if (!M_AXIS_ARESETN)                                                    
+	  // Synchronous reset (active low)                                       
+	    begin                                                                 
+	      mst_exec_state <= IDLE;                                             
+	      count    <= 0;                                                      
+	    end                                                                   
+	  else                                                                    
+	    case (mst_exec_state)                                                 
+	      IDLE:                                                               
+            if ( init_txn_pulse )
+              begin
+                  mst_exec_state  <= INIT_COUNTER;
+              end
+            else
+              begin
+                  mst_exec_state  <= IDLE;
+              end                           
+
+	      INIT_COUNTER:                                                       
+	        if ( (count == START_COUNT_CFG) )                               
+	          begin                                                           
+	            mst_exec_state  <= SEND_STREAM;
+	            count    <= 0;                               
+	          end                                                             
+	        else                                                              
+	          begin                                                           
+	            count <= count + 1;                                           
+	            mst_exec_state  <= INIT_COUNTER;                              
+	          end                                                             
+	                                                                          
+	      SEND_STREAM:                                                        
+	        if (tx_done)                                                      
+	          begin                                                           
+	            mst_exec_state <= IDLE;
+	          end                                                             
+	        else                                                              
+	          begin                                                           
+	            mst_exec_state <= SEND_STREAM;                                
+	          end                                                             
+	    endcase                                                               
+	end                                                                       
+
+	// Delay the axis_tvalid and axis_tlast signal by one clock cycle                              
+    // to match the latency of M_AXIS_TDATA                                                        
+    always @(posedge M_AXIS_ACLK)                                                                  
+    begin                                                                                          
+      if (!M_AXIS_ARESETN || init_txn_pulse)                                                                         
+        begin                                                                                      
+          axis_tlast_delay <= 1'b0;                                                     
+        end                                                                                        
+      else                                                                                         
+        begin                                                                                      
+          axis_tlast_delay <= axis_tlast;
+        end                                                                                        
+    end   
+
+	always@(posedge M_AXIS_ACLK)                                               
+	begin                                                                            
+	  if ( (!M_AXIS_ARESETN) || init_txn_pulse )
+	    begin                                                                        
+	      read_pointer <= 0;                                                         
+	      tx_done <= 1'b0;                                                           
+	    end                                                                          
+	  else                                                                           
+	    if ( read_pointer <= M_AXIS_NUM_DMA_SYMBOL || (endless_mode==1) )                                
+	      begin                                                                      
+	        if (tx_en)                                                               
+	          begin                                                                  
+	            read_pointer <= read_pointer + 1;                                    
+	            tx_done <= 1'b0;                                                     
+	          end                                                                    
+	      end                                                                        
+	    else if ( read_pointer == (M_AXIS_NUM_DMA_SYMBOL + 1) )                             
+	      begin                                                                      
+	        tx_done <= 1'b1;                                                         
+	      end                                                                        
+	end                                                                              
+
+    // fifo64_1clk fifo64_1clk_i (
+    //     .CLK(M_AXIS_ACLK),
+    //     .DATAO(M_AXIS_TDATA),
+    //     .DI(DATA_FROM_ACC),
+    //     .EMPTY(EMPTY),
+    //     .FULL(FULL),
+    //     .RDEN(tx_en),
+    //     .RST(!M_AXIS_ARESETN),
+    //     .WREN(ACC_DATA_READY),
+    //     .data_count(data_count)
+    // );
+
+	xpm_fifo_sync #(
+		.DOUT_RESET_VALUE("0"),    // String
+		.ECC_MODE("no_ecc"),       // String
+		.FIFO_MEMORY_TYPE("auto"), // String
+		.FIFO_READ_LATENCY(0),     // DECIMAL
+		.FIFO_WRITE_DEPTH(MAX_NUM_DMA_SYMBOL),   // DECIMAL
+		.FULL_RESET_VALUE(0),      // DECIMAL
+		.PROG_EMPTY_THRESH(10),    // DECIMAL
+		.PROG_FULL_THRESH(10),     // DECIMAL
+		.RD_DATA_COUNT_WIDTH(bit_num),   // DECIMAL
+		.READ_DATA_WIDTH(C_M_AXIS_TDATA_WIDTH),      // DECIMAL
+		.READ_MODE("fwft"),         // String
+		.USE_ADV_FEATURES("0404"), // only enable rd_data_count and wr_data_count
+		.WAKEUP_TIME(0),           // DECIMAL
+		.WRITE_DATA_WIDTH(C_M_AXIS_TDATA_WIDTH),     // DECIMAL
+		.WR_DATA_COUNT_WIDTH(bit_num)    // DECIMAL
+	) xpm_fifo_sync_rx_intf_m_axis (
+		.almost_empty(),
+		.almost_full(),
+		.data_valid(),
+		.dbiterr(),
+		.dout(M_AXIS_TDATA),
+		.empty(EMPTY),
+		.full(FULL),
+		.overflow(),
+		.prog_empty(),
+		.prog_full(),
+		.rd_data_count(data_count),
+		.rd_rst_busy(),
+		.sbiterr(),
+		.underflow(),
+		.wr_ack(),
+		.wr_data_count(),
+		.wr_rst_busy(),
+		.din(DATA_FROM_ACC),
+		.injectdbiterr(),
+		.injectsbiterr(),
+		.rd_en(tx_en),
+		.rst(!M_AXIS_ARESETN),
+		.sleep(),
+		.wr_clk(M_AXIS_ACLK),
+		.wr_en(ACC_DATA_READY)
+	);
+
+	endmodule
+=======================================================================================================================
+
+
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+`include "clock_speed.v"
+`include "board_def.v"
+
+`timescale 1 ns / 1 ps
+
+`include "rx_intf_pre_def.v"
+
+`ifdef RX_INTF_ENABLE_DBG
+`define DEBUG_PREFIX (*mark_debug="true",DONT_TOUCH="TRUE"*)
+`else
+`define DEBUG_PREFIX
+`endif
+
+	module rx_intf_pl_to_m_axis #
+	(
+    parameter integer GPIO_STATUS_WIDTH = 8,
+    parameter integer RSSI_HALF_DB_WIDTH=11,
+	  parameter integer IQ_DATA_WIDTH	= 16,
+		parameter integer TSF_TIMER_WIDTH = 64,
+		parameter integer C_M00_AXIS_TDATA_WIDTH = 64,
+		parameter integer MAX_BIT_NUM_DMA_SYMBOL = 14
+	)
+	(
+	    input wire clk,
+	    input wire rstn,
+
+	    // port to xpu
+	    input wire block_rx_dma_to_ps,
+      input wire block_rx_dma_to_ps_valid,
+	    input wire [(RSSI_HALF_DB_WIDTH-1):0] rssi_half_db_lock_by_sig_valid,
+	    input wire [(GPIO_STATUS_WIDTH-1):0] gpio_status_lock_by_sig_valid,
+
+	    // to m_axis and PS
+	    output reg start_1trans_to_m_axis,
+	    output wire [(C_M00_AXIS_TDATA_WIDTH-1) : 0] data_to_m_axis_out,
+	    output wire data_ready_to_m_axis_out,
+	    output reg [(MAX_BIT_NUM_DMA_SYMBOL-1) : 0] monitor_num_dma_symbol_to_ps,
+	    output reg m_axis_rst,
+      input  wire m_axis_tlast,
+      output reg  m_axis_tlast_auto_recover,
+
+	    // port to xilinx axi dma
+	    input wire s2mm_intr,
+	    output reg rx_pkt_intr,
+	    
+      // to byte_to_word_fcs_sn_intert
+      output wire rx_pkt_sn_plus_one,
+
+	    // start m_axis trans mode
+      input wire m_axis_tlast_auto_recover_enable,
+      input wire [12:0] m_axis_tlast_auto_recover_timeout_top,
+	    input wire [2:0] start_1trans_mode,
+	    input wire start_1trans_ext_trigger,
+
+	    input wire src_sel,
+	    input wire [(TSF_TIMER_WIDTH-1):0]  tsf_runtime_val,
+	    input wire [14:0] count_top,
+//	    input wire pad_test,
+	    
+      input wire [15:0] max_signal_len_th,
+	    // from wifi rx
+	    input wire [(C_M00_AXIS_TDATA_WIDTH-1) : 0] data_from_acc,
+	    input wire data_ready_from_acc,
+      input wire [7:0] pkt_rate,
+		  input wire [15:0] pkt_len,
+      input wire sig_valid,
+      input wire ht_aggr,
+      input wire ht_aggr_last,
+      input wire ht_sgi,
+      input wire ht_unsupport,
+	    input wire fcs_valid,
+    
+	    // from wifi_rx_iq_intf loop back
+	    input wire [(4*IQ_DATA_WIDTH-1):0] rf_iq,
+	    input wire rf_iq_valid,
+
+      input wire tsf_pulse_1M
+	);
+	
+	  localparam [0:0]   WAIT_S2MM_INTR =                    1'b0,
+                       COUNT_TO_TOP  =                     1'b1;
+                       
+	  localparam [2:0]   WAIT_FOR_PKT =                      3'b000,
+                       DMA_HEADER0_INSERT  =               3'b001,
+                       DMA_HEADER1_INSERT_AND_START =      3'b010,
+                       WAIT_FILTER_FLAG =                  3'b011,
+                       WAIT_DMA_TLAST =                    3'b100,
+                       WAIT_RST_DONE =                     3'b101;
+
+    `DEBUG_PREFIX reg [2:0] rx_state;
+    reg [2:0] old_rx_state;
+    reg start_m_axis;
+    reg [(C_M00_AXIS_TDATA_WIDTH-1) : 0] data_to_m_axis;
+    reg data_ready_to_m_axis;
+    reg [2:0] rst_count;
+    reg [(TSF_TIMER_WIDTH-1):0] tsf_val_lock_by_sig;
+
+    reg [14:0] count;
+
+    reg [12:0] timeout_timer_1M;
+
+    reg s2mm_intr_reg;
+
+    reg [14:0] count_top_scale;
+    reg [14:0] count_top_scale_plus1;
+    
+	  assign data_to_m_axis_out =       (start_1trans_mode==3'b101)? data_to_m_axis:( (src_sel==1'b0)?data_from_acc:rf_iq );
+    assign data_ready_to_m_axis_out = (start_1trans_mode==3'b101)? data_ready_to_m_axis:( (src_sel==1'b0)?data_ready_from_acc:rf_iq_valid );
+
+    assign rx_pkt_sn_plus_one = (rx_state==WAIT_FILTER_FLAG && block_rx_dma_to_ps_valid==1 && block_rx_dma_to_ps==0);
+    
+    always @( start_1trans_mode,sig_valid,fcs_valid,start_1trans_ext_trigger,start_m_axis)
+    begin
+       case (start_1trans_mode)
+          3'b000 : begin
+                        start_1trans_to_m_axis = fcs_valid;
+                   end
+          3'b001 : begin
+                        start_1trans_to_m_axis = sig_valid;
+                   end
+          3'b010 : begin
+                        start_1trans_to_m_axis = start_1trans_ext_trigger;
+                   end
+          3'b011 : begin
+                        start_1trans_to_m_axis = 0;
+                   end
+          3'b100 : begin
+                        start_1trans_to_m_axis = 0;
+                   end
+          3'b101 : begin
+                        start_1trans_to_m_axis = start_m_axis;
+                   end
+          3'b110 : begin
+                        start_1trans_to_m_axis = 0;
+                   end
+          3'b111 : begin
+                        start_1trans_to_m_axis = 0;
+                   end
+          default: begin
+                        start_1trans_to_m_axis = 0;
+                   end
+       endcase
+    end
+
+    //lock tsf runtime value by sig_valid
+    always @( posedge clk )
+    begin
+      if (!rstn) begin
+        tsf_val_lock_by_sig<=0;
+      end 
+      else begin
+        if (sig_valid)
+          tsf_val_lock_by_sig<=tsf_runtime_val;
+        else
+          tsf_val_lock_by_sig<=tsf_val_lock_by_sig;
+      end
+    end
+
+    //state machine to control m_axis to ARM
+    always @(posedge clk)                                             
+    begin
+      if (!rstn) begin
+          rst_count <= 0;
+          monitor_num_dma_symbol_to_ps<=0;
+          m_axis_rst<=0;
+          m_axis_tlast_auto_recover<=0;
+          data_to_m_axis <= 0;
+          data_ready_to_m_axis <= 0;
+          start_m_axis <= 0;
+          rx_state <= WAIT_FOR_PKT;
+          old_rx_state <= WAIT_FOR_PKT;
+          timeout_timer_1M<=0;
+          s2mm_intr_reg <= 0;
+      end
+      else begin
+        old_rx_state <= rx_state;
+        s2mm_intr_reg <= s2mm_intr;
+        count_top_scale <= (count_top*`COUNT_SCALE);
+        count_top_scale_plus1 <= (count_top_scale+1);
+        case (rx_state)
+          WAIT_FOR_PKT: begin
+            timeout_timer_1M<=0;
+            rst_count <= 0;
+            data_to_m_axis <= 0;
+            data_ready_to_m_axis <= 0;
+            start_m_axis <= 0;
+            m_axis_rst<=0;
+            m_axis_tlast_auto_recover<=0;
+            if ( sig_valid && (ht_unsupport==0) && (pkt_len>=14 && pkt_len<=max_signal_len_th) ) begin
+              monitor_num_dma_symbol_to_ps<=( pkt_len[15:3] + (pkt_len[2:0]!=0) ) + 2; // 2 for tsf, rf_info and rate/len insertion at the beginnig;
+              rx_state <= DMA_HEADER0_INSERT;
+            end
+          end
+
+          DMA_HEADER0_INSERT: begin // data is calculated by calc_phy_header C program
+            // timeout_timer_1M<=timeout_timer_1M;
+            // rst_count <= rst_count;
+            //data_to_m_axis <= (pad_test==1?64'h0123456789abcdef:tsf_val_lock_by_sig);
+            data_to_m_axis <= tsf_val_lock_by_sig;
+            data_ready_to_m_axis <= 1;
+            // start_m_axis <= start_m_axis;
+            // monitor_num_dma_symbol_to_ps<=monitor_num_dma_symbol_to_ps;
+            // m_axis_rst<=m_axis_rst;
+            // m_axis_tlast_auto_recover<=m_axis_tlast_auto_recover;
+            rx_state <= DMA_HEADER1_INSERT_AND_START;
+          end
+
+          DMA_HEADER1_INSERT_AND_START: begin // data is calculated by calc_phy_header C program
+            // timeout_timer_1M<=timeout_timer_1M;
+            // rst_count <= rst_count;
+            //data_to_m_axis <= (pad_test==1?64'hfedcba9876543210:{11'd0, pkt_rate[7],pkt_rate[3:0],pkt_len, 8'd0, gpio_status_lock_by_sig_valid, 5'd0, rssi_half_db_lock_by_sig_valid});
+            data_to_m_axis <= {8'd0, ht_aggr_last, ht_aggr, ht_sgi, pkt_rate[7],pkt_rate[3:0],pkt_len, 8'd1, gpio_status_lock_by_sig_valid, 5'd0, rssi_half_db_lock_by_sig_valid};//8'd1 next to gpio_status_lock_by_sig_valid is for pkt exist flag in rx dma buffer
+            // data_ready_to_m_axis <= data_ready_to_m_axis;
+            // start_m_axis <= start_m_axis;
+            // monitor_num_dma_symbol_to_ps<=monitor_num_dma_symbol_to_ps;
+            // m_axis_rst<=m_axis_rst;
+            // m_axis_tlast_auto_recover<=m_axis_tlast_auto_recover;
+            rx_state <= WAIT_FILTER_FLAG;
+          end
+
+          WAIT_FILTER_FLAG: begin
+            // rst_count <= rst_count;
+            data_to_m_axis <= data_from_acc;
+            data_ready_to_m_axis <= data_ready_from_acc;
+            // monitor_num_dma_symbol_to_ps<=monitor_num_dma_symbol_to_ps;
+            if ( (timeout_timer_1M>m_axis_tlast_auto_recover_timeout_top) && m_axis_tlast_auto_recover_enable) begin//tlast timeout, let's generate a fake tlast to release ARM dma and reset our m_axis
+              // start_m_axis <= start_m_axis;
+              // timeout_timer_1M<=timeout_timer_1M;
+              m_axis_rst<=1;
+              m_axis_tlast_auto_recover<=1;
+              rx_state <= WAIT_RST_DONE;
+            end else begin
+              // m_axis_tlast_auto_recover<=m_axis_tlast_auto_recover;
+              if (block_rx_dma_to_ps_valid==1 && block_rx_dma_to_ps==0) begin
+                timeout_timer_1M<=0;
+                start_m_axis <= 1;
+                // m_axis_rst<=m_axis_rst;
+                rx_state <= WAIT_DMA_TLAST;
+              end else if (block_rx_dma_to_ps_valid==1 && block_rx_dma_to_ps==1) begin
+                // timeout_timer_1M<=timeout_timer_1M;
+                // start_m_axis <= start_m_axis;
+                m_axis_rst<=1;
+                rx_state <= WAIT_RST_DONE;
+              end else begin
+                timeout_timer_1M<=(tsf_pulse_1M?(timeout_timer_1M+1):timeout_timer_1M);
+                // start_m_axis <= start_m_axis;
+                // m_axis_rst<=m_axis_rst;
+                // rx_state <= rx_state;
+              end
+            end
+          end
+
+          WAIT_DMA_TLAST: begin
+            // rst_count <= rst_count;
+            data_to_m_axis <= data_from_acc;
+            data_ready_to_m_axis <= data_ready_from_acc;
+            start_m_axis <= 0;
+            // monitor_num_dma_symbol_to_ps<=monitor_num_dma_symbol_to_ps;
+            if ( (timeout_timer_1M>m_axis_tlast_auto_recover_timeout_top) && m_axis_tlast_auto_recover_enable) begin//tlast timeout, let's generate a fake tlast to release ARM dma and reset our m_axis
+              // timeout_timer_1M<=timeout_timer_1M;
+              m_axis_rst<=1;
+              m_axis_tlast_auto_recover<=1;
+              rx_state <= WAIT_RST_DONE;
+            end else begin
+              timeout_timer_1M<=(tsf_pulse_1M?(timeout_timer_1M+1):timeout_timer_1M);
+              // m_axis_rst<=m_axis_rst;
+              // m_axis_tlast_auto_recover<=m_axis_tlast_auto_recover;
+              rx_state <= (m_axis_tlast?WAIT_FOR_PKT:rx_state);
+            end
+          end
+
+          WAIT_RST_DONE: begin
+            // timeout_timer_1M<=timeout_timer_1M;
+            m_axis_tlast_auto_recover<=0;
+            rst_count <= rst_count+1;
+            data_to_m_axis <= 0;
+            data_ready_to_m_axis <= 0;
+            // start_m_axis <= start_m_axis;
+            monitor_num_dma_symbol_to_ps<=0;
+            if (rst_count==7) begin
+              m_axis_rst<=0;
+              rx_state <= WAIT_FOR_PKT;
+            end else begin
+              m_axis_rst<=m_axis_rst;
+              rx_state <= rx_state;
+            end
+          end
+        endcase
+      end
+    end
+
+    // process to generate delayed interrupt after receive s2mm_intr
+    always @(posedge clk) begin                                                                     
+      if ( (!rstn) || (s2mm_intr==1 && s2mm_intr_reg==0) ) begin
+        count    <= 0;
+        rx_pkt_intr<=0;
+      end else begin
+        count <= (count!=count_top_scale_plus1?(count+1):count);
+        rx_pkt_intr <= (count==count_top_scale);
+      end
+    end
+
+	endmodule
+
+=======================================================================================================================
+
+// based on Xilinx module template
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+
+`timescale 1 ns / 1 ps
+
+	module rx_intf_s_axi #
+	(
+		// Users to add parameters here
+
+		// User parameters ends
+		// Do not modify the parameters beyond this line
+
+		// Width of S_AXI data bus
+		parameter integer C_S_AXI_DATA_WIDTH	= 32,
+		// Width of S_AXI address bus
+		parameter integer C_S_AXI_ADDR_WIDTH	= 7
+	)
+	(
+		// Users to add ports here
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG0,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG1,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG2,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG3,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG4,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG5,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG6,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG7,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG8,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG9,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG10,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG11,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG12,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG13,
+        //output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG14,
+        //output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG15,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG16,/*
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG17,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG18,
+        output wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG19,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG20,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG21,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG22,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG23,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG24,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG25,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG26,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG27,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG28,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG29,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG30,
+        input  wire [C_S_AXI_DATA_WIDTH-1:0] SLV_REG31,*/
+		// User ports ends
+		// Do not modify the ports beyond this line
+
+		// Global Clock Signal
+		input wire  S_AXI_ACLK,
+		// Global Reset Signal. This Signal is Active LOW
+		input wire  S_AXI_ARESETN,
+		// Write address (issued by master, acceped by Slave)
+		input wire [C_S_AXI_ADDR_WIDTH-1 : 0] S_AXI_AWADDR,
+		// Write channel Protection type. This signal indicates the
+    		// privilege and security level of the transaction, and whether
+    		// the transaction is a data access or an instruction access.
+		input wire [2 : 0] S_AXI_AWPROT,
+		// Write address valid. This signal indicates that the master signaling
+    		// valid write address and control information.
+		input wire  S_AXI_AWVALID,
+		// Write address ready. This signal indicates that the slave is ready
+    		// to accept an address and associated control signals.
+		output wire  S_AXI_AWREADY,
+		// Write data (issued by master, acceped by Slave) 
+		input wire [C_S_AXI_DATA_WIDTH-1 : 0] S_AXI_WDATA,
+		// Write strobes. This signal indicates which byte lanes hold
+    		// valid data. There is one write strobe bit for each eight
+    		// bits of the write data bus.    
+		input wire [(C_S_AXI_DATA_WIDTH/8)-1 : 0] S_AXI_WSTRB,
+		// Write valid. This signal indicates that valid write
+    		// data and strobes are available.
+		input wire  S_AXI_WVALID,
+		// Write ready. This signal indicates that the slave
+    		// can accept the write data.
+		output wire  S_AXI_WREADY,
+		// Write response. This signal indicates the status
+    		// of the write transaction.
+		output wire [1 : 0] S_AXI_BRESP,
+		// Write response valid. This signal indicates that the channel
+    		// is signaling a valid write response.
+		output wire  S_AXI_BVALID,
+		// Response ready. This signal indicates that the master
+    		// can accept a write response.
+		input wire  S_AXI_BREADY,
+		// Read address (issued by master, acceped by Slave)
+		input wire [C_S_AXI_ADDR_WIDTH-1 : 0] S_AXI_ARADDR,
+		// Protection type. This signal indicates the privilege
+    		// and security level of the transaction, and whether the
+    		// transaction is a data access or an instruction access.
+		input wire [2 : 0] S_AXI_ARPROT,
+		// Read address valid. This signal indicates that the channel
+    		// is signaling valid read address and control information.
+		input wire  S_AXI_ARVALID,
+		// Read address ready. This signal indicates that the slave is
+    		// ready to accept an address and associated control signals.
+		output wire  S_AXI_ARREADY,
+		// Read data (issued by slave)
+		output wire [C_S_AXI_DATA_WIDTH-1 : 0] S_AXI_RDATA,
+		// Read response. This signal indicates the status of the
+    		// read transfer.
+		output wire [1 : 0] S_AXI_RRESP,
+		// Read valid. This signal indicates that the channel is
+    		// signaling the required read data.
+		output wire  S_AXI_RVALID,
+		// Read ready. This signal indicates that the master can
+    		// accept the read data and response information.
+		input wire  S_AXI_RREADY
+	);
+
+	// AXI4LITE signals
+	reg [C_S_AXI_ADDR_WIDTH-1 : 0] 	axi_awaddr;
+	reg  	axi_awready;
+	reg  	axi_wready;
+	reg [1 : 0] 	axi_bresp;
+	reg  	axi_bvalid;
+	reg [C_S_AXI_ADDR_WIDTH-1 : 0] 	axi_araddr;
+	reg  	axi_arready;
+	reg [C_S_AXI_DATA_WIDTH-1 : 0] 	axi_rdata;
+	reg [1 : 0] 	axi_rresp;
+	reg  	axi_rvalid;
+
+	// Example-specific design signals
+	// local parameter for addressing 32 bit / 64 bit C_S_AXI_DATA_WIDTH
+	// ADDR_LSB is used for addressing 32/64 bit registers/memories
+	// ADDR_LSB = 2 for 32 bits (n downto 2)
+	// ADDR_LSB = 3 for 64 bits (n downto 3)
+	localparam integer ADDR_LSB = (C_S_AXI_DATA_WIDTH/32) + 1;
+	localparam integer OPT_MEM_ADDR_BITS = 4;
+	//----------------------------------------------
+	//-- Signals for user logic register space example
+	//------------------------------------------------
+	//-- Number of Slave Registers 32
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg0;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg1;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg2;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg3;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg4;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg5;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg6;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg7;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg8;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg9;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg10;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg11;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg12;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg13;
+	//reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg14;
+	//reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg15;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg16;/*
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg17;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg18;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg19;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg20;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg21;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg22;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg23;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg24;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg25;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg26;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg27;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg28;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg29;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg30;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg31;*/
+	wire	 slv_reg_rden;
+	wire	 slv_reg_wren;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	 reg_data_out;
+	integer	 byte_index;
+
+	// I/O Connections assignments
+
+	assign S_AXI_AWREADY	= axi_awready;
+	assign S_AXI_WREADY	= axi_wready;
+	assign S_AXI_BRESP	= axi_bresp;
+	assign S_AXI_BVALID	= axi_bvalid;
+	assign S_AXI_ARREADY	= axi_arready;
+	assign S_AXI_RDATA	= axi_rdata;
+	assign S_AXI_RRESP	= axi_rresp;
+	assign S_AXI_RVALID	= axi_rvalid;
+	
+    assign SLV_REG0 = slv_reg0;
+    assign SLV_REG1 = slv_reg1;
+    assign SLV_REG2 = slv_reg2;
+    assign SLV_REG3 = slv_reg3;
+    assign SLV_REG4 = slv_reg4;
+    assign SLV_REG5 = slv_reg5;
+    assign SLV_REG6 = slv_reg6;
+    assign SLV_REG7 = slv_reg7;
+    assign SLV_REG8 = slv_reg8;
+    assign SLV_REG9 = slv_reg9;
+    assign SLV_REG10 = slv_reg10;
+    assign SLV_REG11 = slv_reg11;
+    assign SLV_REG12 = slv_reg12;
+    assign SLV_REG13 = slv_reg13;
+    //assign SLV_REG14 = slv_reg14;
+    //assign SLV_REG15 = slv_reg15;
+    assign SLV_REG16 = slv_reg16;
+    //assign SLV_REG17 = slv_reg17;
+    //assign SLV_REG18 = slv_reg18;
+    //assign SLV_REG19 = slv_reg19;
+	// Implement axi_awready generation
+	// axi_awready is asserted for one S_AXI_ACLK clock cycle when both
+	// S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_awready is
+	// de-asserted when reset is low.
+
+	always @( posedge S_AXI_ACLK )
+	begin
+	  if ( S_AXI_ARESETN == 1'b0 )
+	    begin
+	      axi_awready <= 1'b0;
+	    end 
+	  else
+	    begin    
+	      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID)
+	        begin
+	          // slave is ready to accept write address when 
+	          // there is a valid write address and write data
+	          // on the write address and data bus. This design 
+	          // expects no outstanding transactions. 
+	          axi_awready <= 1'b1;
+	        end
+	      else           
+	        begin
+	          axi_awready <= 1'b0;
+	        end
+	    end 
+	end       
+
+	// Implement axi_awaddr latching
+	// This process is used to latch the address when both 
+	// S_AXI_AWVALID and S_AXI_WVALID are valid. 
+
+	always @( posedge S_AXI_ACLK )
+	begin
+	  if ( S_AXI_ARESETN == 1'b0 )
+	    begin
+	      axi_awaddr <= 0;
+	    end 
+	  else
+	    begin    
+	      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID)
+	        begin
+	          // Write Address latching 
+	          axi_awaddr <= S_AXI_AWADDR;
+	        end
+	    end 
+	end       
+
+	// Implement axi_wready generation
+	// axi_wready is asserted for one S_AXI_ACLK clock cycle when both
+	// S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_wready is 
+	// de-asserted when reset is low. 
+
+	always @( posedge S_AXI_ACLK )
+	begin
+	  if ( S_AXI_ARESETN == 1'b0 )
+	    begin
+	      axi_wready <= 1'b0;
+	    end 
+	  else
+	    begin    
+	      if (~axi_wready && S_AXI_WVALID && S_AXI_AWVALID)
+	        begin
+	          // slave is ready to accept write data when 
+	          // there is a valid write address and write data
+	          // on the write address and data bus. This design 
+	          // expects no outstanding transactions. 
+	          axi_wready <= 1'b1;
+	        end
+	      else
+	        begin
+	          axi_wready <= 1'b0;
+	        end
+	    end 
+	end       
+
+	// Implement memory mapped register select and write logic generation
+	// The write data is accepted and written to memory mapped registers when
+	// axi_awready, S_AXI_WVALID, axi_wready and S_AXI_WVALID are asserted. Write strobes are used to
+	// select byte enables of slave registers while writing.
+	// These registers are cleared when reset (active low) is applied.
+	// Slave register write enable is asserted when valid address and data are available
+	// and the slave is ready to accept the write address and write data.
+	assign slv_reg_wren = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID;
+
+	always @( posedge S_AXI_ACLK )
+	begin
+	  if ( S_AXI_ARESETN == 1'b0 )
+	    begin
+	      slv_reg0 <= 32'h0;
+	      slv_reg1 <= 32'h0;
+	      slv_reg2 <= 32'h0;
+	      slv_reg3 <= 32'h0;
+	      slv_reg4 <= 32'h0;
+	      slv_reg5 <= 32'h0;
+	      slv_reg6 <= 32'h0;
+	      slv_reg7 <= 32'h0;
+	      slv_reg8 <= 32'h0;
+	      slv_reg9 <= 32'h0;
+	      slv_reg10 <= 32'h0;
+	      slv_reg11 <= 32'h0;
+	      slv_reg12 <= 32'h0;
+	      slv_reg13 <= 32'h0;
+	      //slv_reg14 <= 32'h0;
+	      //slv_reg15 <= 32'h0;
+	      slv_reg16 <= 32'h0;
+	      //slv_reg17 <= 32'h0;
+	      //slv_reg18 <= 32'h0;
+	      //slv_reg19 <= 32'h0;
+	    end 
+	  else begin
+	    if (slv_reg_wren)
+	      begin
+	        case ( axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
+	          5'h00:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 0
+	                slv_reg0[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h01:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 1
+	                slv_reg1[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h02:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 2
+	                slv_reg2[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h03:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 3
+	                slv_reg3[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h04:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 4
+	                slv_reg4[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h05:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 5
+	                slv_reg5[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h06:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 6
+	                slv_reg6[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h07:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 7
+	                slv_reg7[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h08:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 8
+	                slv_reg8[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h09:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 9
+	                slv_reg9[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h0A:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 10
+	                slv_reg10[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end
+	          5'h0B:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 11
+	                slv_reg11[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end
+	          5'h0C:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 12
+	                slv_reg12[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h0D:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 13
+	                slv_reg13[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  /*
+	          5'h0E:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 14
+	                slv_reg14[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h0F:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 15
+	                slv_reg15[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  */
+	          5'h10:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 16
+	                slv_reg16[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  /*
+	          5'h11:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 17
+	                slv_reg17[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h12:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 18
+	                slv_reg18[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h13:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 19
+	                slv_reg19[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h14:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 20
+	                //slv_reg20[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h15:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 21
+	                //slv_reg21[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h16:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 22
+	                //slv_reg22[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end
+	          5'h17:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 23
+	                //slv_reg23[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end
+	          5'h18:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 24
+	                //slv_reg24[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h19:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 25
+	                //slv_reg25[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h1A:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 26
+	                //slv_reg26[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h1B:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 27
+	                //slv_reg27[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h1C:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 28
+	                //slv_reg28[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h1D:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 29
+	                //slv_reg29[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h1E:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 30
+	                //slv_reg30[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          5'h1F:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 31
+	                //slv_reg31[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  */
+	          default : begin
+	                      slv_reg0 <= slv_reg0;
+	                      slv_reg1 <= slv_reg1;
+	                      slv_reg2 <= slv_reg2;
+	                      slv_reg3 <= slv_reg3;
+	                      slv_reg4 <= slv_reg4;
+	                      slv_reg5 <= slv_reg5;
+	                      slv_reg6 <= slv_reg6;
+	                      slv_reg7 <= slv_reg7;
+	                      slv_reg8 <= slv_reg8;
+	                      slv_reg9 <= slv_reg9;
+	                      slv_reg10 <= slv_reg10;
+	                      slv_reg11 <= slv_reg11;
+	                      slv_reg12 <= slv_reg12;
+	                      slv_reg13 <= slv_reg13;
+	                      //slv_reg14 <= slv_reg14;
+	                      //slv_reg15 <= slv_reg15;
+	                      slv_reg16 <= slv_reg16;
+	                      //slv_reg17 <= slv_reg17;
+	                      //slv_reg18 <= slv_reg18;
+	                      //slv_reg19 <= slv_reg19;
+	                      //slv_reg20 <= slv_reg20;
+	                      //slv_reg21 <= slv_reg21;
+	                      //slv_reg22 <= slv_reg22;
+	                      //slv_reg23 <= slv_reg23;
+	                      //slv_reg24 <= slv_reg24;
+	                      //slv_reg25 <= slv_reg25;
+	                      //slv_reg26 <= slv_reg26;
+	                      //slv_reg27 <= slv_reg27;
+	                      //slv_reg28 <= slv_reg28;
+	                      //slv_reg29 <= slv_reg29;
+	                      //slv_reg30 <= slv_reg30;
+	                      //slv_reg31 <= slv_reg31;
+	                    end
+	        endcase
+	      end
+	  end
+	end    
+
+	// Implement write response logic generation
+	// The write response and response valid signals are asserted by the slave 
+	// when axi_wready, S_AXI_WVALID, axi_wready and S_AXI_WVALID are asserted.  
+	// This marks the acceptance of address and indicates the status of 
+	// write transaction.
+
+	always @( posedge S_AXI_ACLK )
+	begin
+	  if ( S_AXI_ARESETN == 1'b0 )
+	    begin
+	      axi_bvalid  <= 0;
+	      axi_bresp   <= 2'b0;
+	    end 
+	  else
+	    begin    
+	      if (axi_awready && S_AXI_AWVALID && ~axi_bvalid && axi_wready && S_AXI_WVALID)
+	        begin
+	          // indicates a valid write response is available
+	          axi_bvalid <= 1'b1;
+	          axi_bresp  <= 2'b0; // 'OKAY' response 
+	        end                   // work error responses in future
+	      else
+	        begin
+	          if (S_AXI_BREADY && axi_bvalid) 
+	            //check if bready is asserted while bvalid is high) 
+	            //(there is a possibility that bready is always asserted high)   
+	            begin
+	              axi_bvalid <= 1'b0; 
+	            end  
+	        end
+	    end
+	end   
+
+	// Implement axi_arready generation
+	// axi_arready is asserted for one S_AXI_ACLK clock cycle when
+	// S_AXI_ARVALID is asserted. axi_awready is 
+	// de-asserted when reset (active low) is asserted. 
+	// The read address is also latched when S_AXI_ARVALID is 
+	// asserted. axi_araddr is reset to zero on reset assertion.
+
+	always @( posedge S_AXI_ACLK )
+	begin
+	  if ( S_AXI_ARESETN == 1'b0 )
+	    begin
+	      axi_arready <= 1'b0;
+	      axi_araddr  <= 32'b0;
+	    end 
+	  else
+	    begin    
+	      if (~axi_arready && S_AXI_ARVALID)
+	        begin
+	          // indicates that the slave has acceped the valid read address
+	          axi_arready <= 1'b1;
+	          // Read address latching
+	          axi_araddr  <= S_AXI_ARADDR;
+	        end
+	      else
+	        begin
+	          axi_arready <= 1'b0;
+	        end
+	    end 
+	end       
+
+	// Implement axi_arvalid generation
+	// axi_rvalid is asserted for one S_AXI_ACLK clock cycle when both 
+	// S_AXI_ARVALID and axi_arready are asserted. The slave registers 
+	// data are available on the axi_rdata bus at this instance. The 
+	// assertion of axi_rvalid marks the validity of read data on the 
+	// bus and axi_rresp indicates the status of read transaction.axi_rvalid 
+	// is deasserted on reset (active low). axi_rresp and axi_rdata are 
+	// cleared to zero on reset (active low).  
+	always @( posedge S_AXI_ACLK )
+	begin
+	  if ( S_AXI_ARESETN == 1'b0 )
+	    begin
+	      axi_rvalid <= 0;
+	      axi_rresp  <= 0;
+	    end 
+	  else
+	    begin    
+	      if (axi_arready && S_AXI_ARVALID && ~axi_rvalid)
+	        begin
+	          // Valid read data is available at the read data bus
+	          axi_rvalid <= 1'b1;
+	          axi_rresp  <= 2'b0; // 'OKAY' response
+	        end   
+	      else if (axi_rvalid && S_AXI_RREADY)
+	        begin
+	          // Read data is accepted by the master
+	          axi_rvalid <= 1'b0;
+	        end                
+	    end
+	end    
+
+	// Implement memory mapped register select and read logic generation
+	// Slave register read enable is asserted when valid address is available
+	// and the slave is ready to accept the read address.
+	assign slv_reg_rden = axi_arready & S_AXI_ARVALID & ~axi_rvalid;
+	always @(*)
+	begin
+	      // Address decoding for reading registers
+	      case ( axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
+	        5'h00   : reg_data_out <= slv_reg0;
+	        5'h01   : reg_data_out <= slv_reg1;
+	        5'h02   : reg_data_out <= slv_reg2;
+	        5'h03   : reg_data_out <= slv_reg3;
+	        5'h04   : reg_data_out <= slv_reg4;
+	        5'h05   : reg_data_out <= slv_reg5;
+	        5'h06   : reg_data_out <= slv_reg6;
+	        5'h07   : reg_data_out <= slv_reg7;
+	        5'h08   : reg_data_out <= slv_reg8;
+	        5'h09   : reg_data_out <= slv_reg9;
+	        5'h0A   : reg_data_out <= slv_reg10;
+	        5'h0B   : reg_data_out <= slv_reg11;
+	        5'h0C   : reg_data_out <= slv_reg12;
+	        5'h0D   : reg_data_out <= slv_reg13;
+	        //5'h0E   : reg_data_out <= slv_reg14;
+	        //5'h0F   : reg_data_out <= slv_reg15;
+	        5'h10   : reg_data_out <= slv_reg16;/*
+	        5'h11   : reg_data_out <= slv_reg17;
+	        5'h12   : reg_data_out <= slv_reg18;
+	        5'h13   : reg_data_out <= slv_reg19;
+	        5'h14   : reg_data_out <= slv_reg20;
+	        5'h15   : reg_data_out <= slv_reg21;
+	        5'h16   : reg_data_out <= slv_reg22;
+	        5'h17   : reg_data_out <= slv_reg23;
+	        5'h18   : reg_data_out <= slv_reg24;
+	        5'h19   : reg_data_out <= slv_reg25;
+	        5'h1A   : reg_data_out <= slv_reg26;
+	        5'h1B   : reg_data_out <= slv_reg27;
+	        5'h1C   : reg_data_out <= slv_reg28;
+	        5'h1D   : reg_data_out <= slv_reg29;
+	        5'h1E   : reg_data_out <= slv_reg30;
+	        5'h1F   : reg_data_out <= slv_reg31;*/
+	        default : reg_data_out <= 0;
+	      endcase
+	end
+
+	// Output register or memory read data
+	always @( posedge S_AXI_ACLK )
+	begin
+	  if ( S_AXI_ARESETN == 1'b0 )
+	    begin
+	      axi_rdata  <= 0;
+	    end 
+	  else
+	    begin    
+	      // When there is a valid read address (S_AXI_ARVALID) with 
+	      // acceptance of read address by the slave (axi_arready), 
+	      // output the read dada 
+	      if (slv_reg_rden)
+	        begin
+	          axi_rdata <= reg_data_out;     // register read data
+	        end   
+	    end
+	end    
+
+	// // Add user logic here
+    // always @( posedge S_AXI_ACLK )
+    // begin
+    //   if ( S_AXI_ARESETN == 1'b0 )
+    //     begin
+    //       slv_reg20 <= 32'h0;
+    //       slv_reg21 <= 32'h0;
+    //       slv_reg22 <= 32'h0;
+    //       slv_reg23 <= 32'h0;
+    //       slv_reg24 <= 32'h0;
+    //       slv_reg25 <= 32'h0;
+    //       slv_reg26 <= 32'h0;
+    //       slv_reg27 <= 32'h0;
+    //       slv_reg28 <= 32'h0;
+    //       slv_reg29 <= 32'h0;
+    //       slv_reg30 <= 32'h0;
+    //       slv_reg31 <= 32'h0;
+    //     end 
+    //   else
+    //     begin
+    //       slv_reg20 <= SLV_REG20;
+    //       slv_reg21 <= SLV_REG21;
+    //       slv_reg22 <= SLV_REG22;
+    //       slv_reg23 <= SLV_REG23;
+    //       slv_reg24 <= SLV_REG24;
+    //       slv_reg25 <= SLV_REG25;
+    //       slv_reg26 <= SLV_REG26;
+    //       slv_reg27 <= SLV_REG27;
+    //       slv_reg28 <= SLV_REG28;
+    //       slv_reg29 <= SLV_REG29;
+    //       slv_reg30 <= SLV_REG30;
+    //       slv_reg31 <= SLV_REG31;
+    //     end 
+    // end       
+    
+	// User logic ends
+
+	endmodule
+
+=======================================================================================================================
+
+
+
+// Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+`include "clock_speed.v"
+`include "board_def.v"
+
+`timescale 1 ns / 1 ps
+
+`define COUNT_TOP_20M  ((`NUM_CLK_PER_SAMPLE)-1)
+
+`define RX_IQ_RATE_ADAPTATION_BYPASS 1
+
+	module rx_iq_intf #
+	(
+	    parameter integer C_S00_AXIS_TDATA_WIDTH	= 64,
+      parameter integer IQ_DATA_WIDTH	=     16
+	)
+	(
+    // -------------debug purpose----------------
+    // output reg trigger_out,
+    // -------------debug purpose----------------
+
+    input wire rstn,
+    input wire clk,
+    
+    input wire [(IQ_DATA_WIDTH-1):0] bw20_i0,
+    input wire [(IQ_DATA_WIDTH-1):0] bw20_q0,
+    input wire [(IQ_DATA_WIDTH-1):0] bw20_i1,
+    input wire [(IQ_DATA_WIDTH-1):0] bw20_q1,
+    input wire bw20_iq_valid,
+
+    input wire fifo_in_en,
+    input wire fifo_out_en,
+    input wire bb_20M_en,
+      
+    // to wifi receiver
+    output wire [(IQ_DATA_WIDTH-1) : 0] rf_i0,
+    output wire [(IQ_DATA_WIDTH-1) : 0] rf_q0,
+    output wire [(IQ_DATA_WIDTH-1) : 0] rf_i1,
+    output wire [(IQ_DATA_WIDTH-1) : 0] rf_q1,
+    output wire rf_iq_valid,
+    input  wire rf_iq_valid_delay_sel,
+    
+    // to m_axis for loop back test
+    output wire [((4*IQ_DATA_WIDTH)-1):0] rf_iq,
+    
+    output wire wifi_rx_iq_fifo_emptyn
+	);
+
+`ifdef RX_IQ_RATE_ADAPTATION_BYPASS
+
+    assign rf_i0 = bw20_i0;
+    assign rf_q0 = bw20_q0;
+    assign rf_i1 = bw20_i1;
+    assign rf_q1 = bw20_q1;
+    assign rf_iq_valid = bw20_iq_valid;
+
+    assign rf_iq = 0;
+
+    assign wifi_rx_iq_fifo_emptyn = 0;
+
+// // for debug purpose -- debug is done. everything is ok. we have uniformed 20M valid signal (every 12 clock for zcu102)
+//     reg [4:0] counter;
+//     reg [4:0] num_clk;
+//     always @( posedge clk )
+//     begin
+//       if ( rstn == 0 ) begin
+//         counter <= 0;
+//         num_clk <= 0;
+//       end else begin
+//         if (bw20_iq_valid) begin
+//           counter <= 0;
+//           num_clk <= counter;
+//         end else begin
+//           counter <= counter + 1;
+//           num_clk <= num_clk;
+//         end
+//       end
+//     end
+
+`else
+
+    wire empty;
+    wire full;
+    wire rden;
+    wire wren;
+    wire bb_en;
+    wire [5:0] data_count;
+    wire [((4*IQ_DATA_WIDTH)-1):0] data_selected;
+    wire wren_selected;
+    reg [4:0] counter;
+    reg [4:0] counter_top;
+    reg rf_iq_valid_reg;
+    wire fractional_flag;
+    reg counter_top_flag;
+
+// // ---------for debug purpose------------
+//     // (* mark_debug = "true" *) wire [8:0] num_clk_per_sample;
+//     // (* mark_debug = "true" *) wire [8:0] sampling_rate_mhz;
+//     // (* mark_debug = "true" *) wire [8:0] num_clk_per_us;
+//     // (* mark_debug = "true" *) wire [8:0] num_clk_per_us_new;
+//     // (* mark_debug = "true" *) wire fractional_flag_shadow;
+//     // (* mark_debug = "true" *) wire fractional_flag_shadow1;
+//     // assign num_clk_per_sample = `NUM_CLK_PER_SAMPLE;
+//     // assign sampling_rate_mhz = `SAMPLING_RATE_MHZ;
+//     // assign num_clk_per_us = `NUM_CLK_PER_US;
+//     // assign num_clk_per_us_new = (num_clk_per_sample*sampling_rate_mhz);
+//     // assign fractional_flag_shadow = ((`NUM_CLK_PER_SAMPLE*`SAMPLING_RATE_MHZ) != `NUM_CLK_PER_US);
+//     // assign fractional_flag_shadow1 = ((num_clk_per_sample*sampling_rate_mhz) != num_clk_per_us);
+
+//     reg [4:0] rden_count;
+//     reg [4:0] wren_count;
+//     reg rden_reg;
+//     reg wren_reg;
+//     reg [4:0] counter_top_old;
+//     always @( posedge clk )
+//     begin
+//       if ( rstn == 1'b0 ) begin
+//         rden_count <= 0;
+//         wren_count <= 0;
+//         rden_reg <= 0;
+//         wren_reg <= 0;
+//         counter_top_old <= 0;
+//         trigger_out <= 0;
+//       end else begin
+//         rden_reg <= rden;
+//         wren_reg <= wren;
+//         if (rden==1 && rden_reg==0)
+//           rden_count <= 0;
+//         else
+//           rden_count <= rden_count + 1;
+
+//         if (wren==1 && wren_reg==0)
+//           wren_count <= 0;
+//         else
+//           wren_count <= wren_count + 1;
+        
+//         if (counter == 0) begin // do the check and action when an I/Q is read
+//           counter_top_old <= counter_top;
+//           trigger_out <= (counter_top_old!=counter_top);
+//         end
+//       end
+//     end
+// // ------------end of debug----------
+
+    assign rf_i0 = rf_iq[    (IQ_DATA_WIDTH-1) : 0];
+    assign rf_q0 = rf_iq[((2*IQ_DATA_WIDTH)-1) : (1*IQ_DATA_WIDTH)];
+    assign rf_i1 = rf_iq[((3*IQ_DATA_WIDTH)-1) : (2*IQ_DATA_WIDTH)];
+    assign rf_q1 = rf_iq[((4*IQ_DATA_WIDTH)-1) : (3*IQ_DATA_WIDTH)];
+    assign bb_en = ( (counter==0)|bb_20M_en );
+    assign rden = ( (bb_en&(~empty))?1'b1:1'b0 )&fifo_out_en;
+    assign wren = wren_selected&fifo_in_en;
+    assign rf_iq_valid = ( (rf_iq_valid_delay_sel==1'b0)? rf_iq_valid_reg : rden);
+    assign wifi_rx_iq_fifo_emptyn = (~empty);
+
+    // assign fractional_flag = (num_clk_per_us_new != num_clk_per_us);
+    assign fractional_flag = ((`NUM_CLK_PER_SAMPLE*`SAMPLING_RATE_MHZ) != `NUM_CLK_PER_US);
+    
+    // rate control to make sure ofdm rx get I/Q as uniform as possible
+    always @( posedge clk )
+    begin
+      if ( rstn == 0 ) begin
+        counter_top <= `COUNT_TOP_20M; // COUNT_TOP_20M is the expected value when there is no drift between front-end and baseband clock
+        counter_top_flag <= 0;
+      end else begin
+        if (counter == 0) begin // do the check and action when an I/Q is read
+          counter_top_flag <= (~counter_top_flag);
+          if (fractional_flag) begin
+            if (data_count<11) // if less amount of data in fifo, read slower by making counter period longer
+              counter_top <= (`COUNT_TOP_20M+1);
+            else if (data_count<22) // if normal amount of data in fifo, read at normal speed: baseband 20Msps
+              counter_top <= (counter_top_flag?(`COUNT_TOP_20M):(`COUNT_TOP_20M+1));
+            else // if more amount of data in fifo, read faster by making counter period shorter
+              counter_top <= (`COUNT_TOP_20M);
+          end else begin
+            if (data_count<11) // if less amount of data in fifo, read slower by making counter period longer
+              counter_top <= (`COUNT_TOP_20M+1);
+            else if (data_count<22) // if normal amount of data in fifo, read at normal speed: baseband 20Msps
+              counter_top <= `COUNT_TOP_20M;
+            else // if more amount of data in fifo, read faster by making counter period shorter
+              counter_top <= (`COUNT_TOP_20M-1);
+          end
+        end
+      end
+    end
+    
+    // 20MHz en
+    always @( posedge clk )
+    begin
+      if ( rstn == 0 )
+        counter <= 0;
+      else
+        if (counter == counter_top)
+          counter <= 0;
+        else
+          counter <= counter + 1'b1;
+    end
+
+    //delay I/Q valid to wifi receiver for loop back mode
+    always @( posedge clk )
+    begin
+      if ( rstn == 1'b0 )
+        rf_iq_valid_reg <= 1'd0;
+      else
+        rf_iq_valid_reg <= rden;
+    end
+
+    // I/Q source selection
+    assign data_selected[(IQ_DATA_WIDTH-1) : 0] = bw20_i0;
+    assign data_selected[((2*IQ_DATA_WIDTH)-1) : IQ_DATA_WIDTH] = bw20_q0;
+    assign data_selected[((3*IQ_DATA_WIDTH)-1) : (2*IQ_DATA_WIDTH)] = bw20_i1;
+    assign data_selected[((4*IQ_DATA_WIDTH)-1) : (3*IQ_DATA_WIDTH)] = bw20_q1;
+    assign wren_selected = bw20_iq_valid;
+    
+    // fifo32_1clk_dep32 fifo32_1clk_dep32_i (
+    //     .CLK(clk),
+    //     .DATAO(rf_iq),
+    //     .DI(data_selected),
+    //     .EMPTY(empty),
+    //     .FULL(full),
+    //     .RDEN(rden),
+    //     .RST(~rstn),
+    //     .WREN(wren),
+    //     .data_count(data_count)
+    // );
+
+    xpm_fifo_sync #(
+      .DOUT_RESET_VALUE("0"),    // String
+      .ECC_MODE("no_ecc"),       // String
+      .FIFO_MEMORY_TYPE("auto"), // String
+      .FIFO_READ_LATENCY(0),     // DECIMAL
+      .FIFO_WRITE_DEPTH(32),   // DECIMAL
+      .FULL_RESET_VALUE(0),      // DECIMAL
+      .PROG_EMPTY_THRESH(10),    // DECIMAL
+      .PROG_FULL_THRESH(10),     // DECIMAL
+      .RD_DATA_COUNT_WIDTH(6),   // DECIMAL
+      .READ_DATA_WIDTH(64),      // DECIMAL
+      .READ_MODE("fwft"),         // String
+      .USE_ADV_FEATURES("0404"), // only enable rd_data_count and wr_data_count
+      .WAKEUP_TIME(0),           // DECIMAL
+      .WRITE_DATA_WIDTH(64),     // DECIMAL
+      .WR_DATA_COUNT_WIDTH(6)    // DECIMAL
+    )
+    xpm_fifo_sync_rx_iq_intf (
+      .almost_empty(),
+      .almost_full(),
+      .data_valid(),
+      .dbiterr(),
+      .dout(rf_iq),
+      .empty(empty),
+      .full(full),
+      .overflow(),
+      .prog_empty(),
+      .prog_full(),
+      .rd_data_count(data_count),
+      .rd_rst_busy(),
+      .sbiterr(),
+      .underflow(),
+      .wr_ack(),
+      .wr_data_count(),
+      .wr_rst_busy(),
+      .din(data_selected),
+      .injectdbiterr(),
+      .injectsbiterr(),
+      .rd_en(rden),
+      .rst(~rstn),
+      .sleep(),
+      .wr_clk(clk),
+      .wr_en(wren)
+    );
+
+`endif
+
+	endmodule
+=======================================================================================================================
+
+
+
+
+

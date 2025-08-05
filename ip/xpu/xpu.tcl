@@ -17,6 +17,7 @@ set ARGUMENT6 [lindex $argv 5]
 set ARGUMENT7 [lindex $argv 6]
 
 if {$ARGUMENT1 eq ""} {
+  # MODIFIED: Default BOARD_NAME to zc702_fmcs2
   set BOARD_NAME zc702_fmcs2
 } else {
   set BOARD_NAME $ARGUMENT1
@@ -76,7 +77,6 @@ file copy -force ../board_def.v ./src/board_def.v
 # -----------generate openwifi_hw_git_rev.v---------------
 set  fd  [open  "./src/openwifi_hw_git_rev.v"  w]
 if {[file exists "../../get_git_rev.sh"]} {
-  # MODIFIED: Explicitly use 'sh' to execute the shell script on Windows
   set HASHCODE [exec sh ../../get_git_rev.sh]
   puts $fd "`define OPENWIFI_HW_GIT_REV (32'h$HASHCODE)"
 } else {
@@ -93,23 +93,21 @@ puts $fd "`define SPI_LOW 24'hC02001"
 close $fd
 # ---------end of generate spi_command.v--------------------
 
+# Set the reference directory for source file relative paths
 set origin_dir "."
 set project_name "xpu"
-# If a project is already open, close it
+
+# MODIFIED: Robust project cleanup
+catch {close_sim}
 if {[get_projects -quiet] != ""} {
-    # MODIFIED: Removed the '-force' option which is not compatible with all Vivado versions
     close_project
 }
-# Remove the old project directory
-# MODIFIED: Use Tcl's built-in file delete for better portability and error handling
 if {[file isdirectory $project_name]} {
     file delete -force -- $project_name
 }
 
-
+# Create project
 create_project ${project_name} ./${project_name} -part $part_string
-
-set proj_dir [get_property directory [current_project]]
 
 # Set project properties
 set obj [current_project]
@@ -149,7 +147,7 @@ set files [list \
  "[file normalize "$origin_dir/src/edge_to_flip.v"]"\
 ]
 add_files -norecurse -fileset $obj $files
-set_property -name "top" -value "xpu" -objects $obj
+set_property top xpu $obj
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -161,26 +159,33 @@ if {[string equal [get_filesets -quiet sim_1] ""]} {
   create_fileset -simset sim_1
 }
 set obj [get_filesets sim_1]
-# MODIFIED: Add the EXISTING mv_avg testbench to the simulation set
-set files [list \
- "[file normalize "$origin_dir/unit_test/mv_avg/mv_avg_tb.v"]"\
-]
-add_files -norecurse -fileset $obj $files
-
-# MODIFIED: Set the top-level simulation module to the mv_avg testbench
-set_property -name "top" -value "mv_avg_tb" -objects $obj
+add_files -fileset $obj [list "[file normalize "$origin_dir/src/xpu_tb.v"]"]
+set_property top xpu_tb $obj
+set_property -name "xsim.elaborate.debug_level" -value "typical" -objects $obj
+set_property -name "xsim.elaborate.load_glbl" -value "1" -objects $obj
+set_property -name "xsim.simulate.runtime" -value "2000ns" -objects $obj
+set_property -name "xsim.simulate.custom_tcl" -value "" -objects $obj
 
 # Create 'synth_1' run (if not found)
 if {[string equal [get_runs -quiet synth_1] ""]} {
-    create_run -name synth_1 -part $part_string -flow {Vivado Synthesis 2021} -strategy "Vivado Synthesis Defaults" -constrset constrs_1
+    create_run -name synth_1 -part $part_string -flow {Vivado Synthesis 2021} -strategy "Vivado Synthesis Defaults" -report_strategy {No Reports} -constrset constrs_1
 }
+set obj [get_runs synth_1]
+# (Synthesis run properties preserved from original script)
 
 # Create 'impl_1' run (if not found)
 if {[string equal [get_runs -quiet impl_1] ""]} {
-    create_run -name impl_1 -part $part_string -flow {Vivado Implementation 2021} -strategy "Vivado Implementation Defaults" -constrset constrs_1 -parent_run synth_1
+    create_run -name impl_1 -part $part_string -flow {Vivado Implementation 2021} -strategy "Vivado Implementation Defaults" -report_strategy {No Reports} -constrset constrs_1 -parent_run synth_1
 }
+set obj [get_runs impl_1]
+set_property set_report_strategy_name 1 $obj
+set_property report_strategy {Vivado Implementation Default Reports} $obj
+set_property set_report_strategy_name 0 $obj
+# Create 'impl_1_init_report_timing_summary_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_init_report_timing_summary_0] "" ] } {
+  create_report_config -report_name impl_1_init_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps init_design -runs impl_1
+}
+# (All other report configurations preserved from original script)...
 
-# Set current impl run
 current_run -implementation [get_runs impl_1]
-
 puts "INFO: Project created: $project_name"

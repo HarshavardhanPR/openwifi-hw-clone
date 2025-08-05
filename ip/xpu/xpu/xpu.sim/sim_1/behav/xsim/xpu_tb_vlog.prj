@@ -1,0 +1,29 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../src/cca.v" \
+"../../../../../src/csma_ca.v" \
+"../../../../../src/cw_exp.v" \
+"../../../../../src/dc_rm.v" \
+"../../../../../src/edge_to_flip.v" \
+"../../../../../src/fifo_sample_delay.v" \
+"../../../../../src/iq_abs_avg.v" \
+"../../../../../src/iq_rssi_to_db.v" \
+"../../../../../src/mv_avg_dual_ch.v" \
+"../../../../../src/n_sym_len14_pkt.v" \
+"../../../../../src/phy_rx_parse.v" \
+"../../../../../src/pkt_filter_ctl.v" \
+"../../../../../src/rssi.v" \
+"../../../../../src/spi.v" \
+"../../../../../src/time_slice_gen.v" \
+"../../../../../src/tsf_timer.v" \
+"../../../../../src/tx_control.v" \
+"../../../../../src/tx_on_detection.v" \
+"../../../../../src/xpu.v" \
+"../../../../../src/xpu_s_axi.v" \
+"../../../../../src/xpu_tb.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

@@ -42,6 +42,10 @@ reg [LOG2_AVG_LEN:0]  wr_data_count_reg;
 wire wr_complete_pulse;
 reg  wr_complete_pulse_reg;
 
+// MODIFIED: Added missing wire declarations
+wire empty;
+wire full;
+
 assign wr_complete_pulse = (wr_data_count > wr_data_count_reg);
 assign data_out_valid = wr_complete_pulse_reg;
 assign data_out0 = running_total0[TOTAL_WIDTH0-1:LOG2_AVG_LEN];

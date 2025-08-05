@@ -15,6 +15,8 @@ module mv_avg
     output wire signed [DATA_WIDTH-1:0] data_out,
     output wire data_out_valid
 );
+wire empty;
+wire full;
 
 localparam FIFO_SIZE = 1<<LOG2_AVG_LEN;
 localparam TOTAL_WIDTH = DATA_WIDTH + LOG2_AVG_LEN;

@@ -1,12 +1,51 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module mv_avg
-INFO: [VRFC 10-2458] undeclared symbol empty, assumed default net type wire [C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg.v:62]
-INFO: [VRFC 10-2458] undeclared symbol full, assumed default net type wire [C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg.v:63]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/cca.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cca
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/csma_ca.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module csma_ca
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/cw_exp.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cw_exp
+WARNING: [VRFC 10-2500] empty parameter declaration is only allowed in SystemVerilog mode [C:/SPB_Data/openwifi-hw/ip/xpu/src/cw_exp.v:12]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/dc_rm.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dc_rm
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/edge_to_flip.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module edge_to_flip
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/fifo_sample_delay.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_sample_delay
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/iq_abs_avg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module iq_abs_avg
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/iq_rssi_to_db.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module iq_rssi_to_db
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg_dual_ch.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module mv_avg_dual_ch
-INFO: [VRFC 10-2458] undeclared symbol empty, assumed default net type wire [C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg_dual_ch.v:72]
-INFO: [VRFC 10-2458] undeclared symbol full, assumed default net type wire [C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg_dual_ch.v:73]
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/unit_test/mv_avg/mv_avg_tb.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module mv_avg_tb
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/n_sym_len14_pkt.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module n_sym_len14_pkt
+WARNING: [VRFC 10-2500] empty parameter declaration is only allowed in SystemVerilog mode [C:/SPB_Data/openwifi-hw/ip/xpu/src/n_sym_len14_pkt.v:5]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/phy_rx_parse.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module phy_rx_parse
+WARNING: [VRFC 10-2500] empty parameter declaration is only allowed in SystemVerilog mode [C:/SPB_Data/openwifi-hw/ip/xpu/src/phy_rx_parse.v:5]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/pkt_filter_ctl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pkt_filter_ctl
+WARNING: [VRFC 10-2500] empty parameter declaration is only allowed in SystemVerilog mode [C:/SPB_Data/openwifi-hw/ip/xpu/src/pkt_filter_ctl.v:13]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/rssi.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module rssi
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/spi.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module spi_module
+WARNING: [VRFC 10-2500] empty parameter declaration is only allowed in SystemVerilog mode [C:/SPB_Data/openwifi-hw/ip/xpu/src/spi.v:6]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/time_slice_gen.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module time_slice_gen
+WARNING: [VRFC 10-2500] empty parameter declaration is only allowed in SystemVerilog mode [C:/SPB_Data/openwifi-hw/ip/xpu/src/time_slice_gen.v:13]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/tsf_timer.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tsf_timer
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/tx_control.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tx_control
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/tx_on_detection.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tx_on_detection
+WARNING: [VRFC 10-2500] empty parameter declaration is only allowed in SystemVerilog mode [C:/SPB_Data/openwifi-hw/ip/xpu/src/tx_on_detection.v:15]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/xpu.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module xpu
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/xpu_s_axi.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module xpu_s_axi
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/src/xpu_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module xpu_tb
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/SPB_Data/openwifi-hw/ip/xpu/xpu/xpu.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module glbl

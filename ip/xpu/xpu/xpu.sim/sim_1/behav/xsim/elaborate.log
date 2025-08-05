@@ -1,31 +1,51 @@
 Vivado Simulator v2021.1
 Copyright 1986-1999, 2001-2021 Xilinx, Inc. All Rights Reserved.
-Running: D:/Apps/v_log/Vivado/2021.1/bin/unwrapped/win64.o/xelab.exe -wto 36fa8d5ca3494789b3d7223e10d6edd3 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot mv_avg_tb_behav xil_defaultlib.mv_avg_tb xil_defaultlib.glbl -log elaborate.log 
+Running: D:/Apps/v_log/Vivado/2021.1/bin/unwrapped/win64.o/xelab.exe -wto eea588439d664c89853de9f3aeba6a85 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot xpu_tb_behav xil_defaultlib.xpu_tb xil_defaultlib.glbl -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
 Completed static elaboration
 Starting simulation data flow analysis
-WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg.v" Line 3. Module mv_avg(DATA_WIDTH=32) doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg_dual_ch.v" Line 3. Module mv_avg_dual_ch(DATA_WIDTH0=32,DATA_WIDTH1=32,LOG2_AVG_LEN=4) doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg.v" Line 3. Module mv_avg(DATA_WIDTH=32) doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "C:/SPB_Data/openwifi-hw/ip/xpu/src/mv_avg_dual_ch.v" Line 3. Module mv_avg_dual_ch(DATA_WIDTH0=32,DATA_WIDTH1=32,LOG2_AVG_LEN=4) doesn't have a timescale but at least one module in design has a timescale.
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.edge_to_flip
+Compiling module xil_defaultlib.tx_on_detection
+Compiling module xil_defaultlib.cca
+Compiling module xil_defaultlib.n_sym_len14_pkt
+Compiling module xil_defaultlib.csma_ca
+Compiling module xil_defaultlib.cw_exp
+Compiling module xil_defaultlib.tx_control
+Compiling module xil_defaultlib.pkt_filter_ctl
+Compiling module xil_defaultlib.phy_rx_parse
 Compiling module xpm.xpm_fifo_rst_default
 Compiling module xpm.xpm_fifo_reg_bit
+Compiling module xpm.xpm_counter_updn(COUNTER_WIDTH=8...
+Compiling module xpm.xpm_counter_updn(COUNTER_WIDTH=7...
+Compiling module xpm.xpm_memory_base(MEMORY_TYPE=1,ME...
+Compiling module xpm.xpm_counter_updn(COUNTER_WIDTH=2...
+Compiling module xpm.xpm_fifo_base(FIFO_WRITE_DEPTH=1...
+Compiling module xpm.xpm_fifo_sync(FIFO_WRITE_DEPTH=1...
+Compiling module xil_defaultlib.mv_avg_dual_ch(LOG2_AVG_LEN=7)
+Compiling module xil_defaultlib.dc_rm
 Compiling module xpm.xpm_counter_updn(COUNTER_WIDTH=6...
 Compiling module xpm.xpm_counter_updn(COUNTER_WIDTH=5...
 Compiling module xpm.xpm_memory_base(MEMORY_TYPE=1,ME...
-Compiling module xpm.xpm_counter_updn(COUNTER_WIDTH=2...
 Compiling module xpm.xpm_fifo_base(FIFO_WRITE_DEPTH=3...
 Compiling module xpm.xpm_fifo_sync(FIFO_WRITE_DEPTH=3...
-Compiling module xil_defaultlib.mv_avg(DATA_WIDTH=32)
-Compiling module xpm.xpm_counter_updn
+Compiling module xil_defaultlib.mv_avg_dual_ch_default
+Compiling module xil_defaultlib.iq_abs_avg
+Compiling module xil_defaultlib.iq_rssi_to_db
 Compiling module xpm.xpm_memory_base(MEMORY_TYPE=1,ME...
 Compiling module xpm.xpm_fifo_base(FIFO_WRITE_DEPTH=1...
 Compiling module xpm.xpm_fifo_sync(FIFO_WRITE_DEPTH=1...
-Compiling module xil_defaultlib.mv_avg_dual_ch(DATA_WIDTH0=32,DA...
-Compiling module xil_defaultlib.mv_avg_tb
+Compiling module xil_defaultlib.fifo_sample_delay
+Compiling module xil_defaultlib.rssi
+Compiling module xil_defaultlib.time_slice_gen
+Compiling module xil_defaultlib.tsf_timer
+Compiling module xpm.xpm_cdc_array_single(WIDTH=1)
+Compiling module xil_defaultlib.spi_module
+Compiling module xil_defaultlib.xpu_s_axi_default
+Compiling module xil_defaultlib.xpu
+Compiling module xil_defaultlib.xpu_tb
 Compiling module xil_defaultlib.glbl
-Built simulation snapshot mv_avg_tb_behav
+Built simulation snapshot xpu_tb_behav

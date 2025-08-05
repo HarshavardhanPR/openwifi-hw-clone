@@ -154,6 +154,9 @@ module xpu #
   input  wire s00_axi_rready
 );
 
+wire last_rx_fail;
+wire last_tx_fail;
+
   wire slv_reg_wren_signal;
   wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg0; // rst
   wire [(C_S00_AXI_DATA_WIDTH-1):0] slv_reg1; // some source selection
@@ -644,8 +647,8 @@ module xpu #
   phy_rx_parse # (
   ) phy_rx_parse_i (
     .clk(s00_axi_aclk),
-    .rstn(s00_axi_aresetn&(~slv_reg0[3])&(~pkt_header_valid_strobe)),
-
+    //.rstn(s00_axi_aresetn&(~slv_reg0[3])&(~pkt_header_valid_strobe)),
+    .rstn(s00_axi_aresetn&(~slv_reg0[3])),
     .ofdm_byte_index(byte_count),
     .ofdm_byte(byte_in),
     .ofdm_byte_valid(byte_in_strobe),
